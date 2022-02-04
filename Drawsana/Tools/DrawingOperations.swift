@@ -162,7 +162,7 @@ public struct ChangeExplicitWidthOperation: DrawingOperation {
 }
 
 /**
- reset drawings
+ reset drawing view
  */
 public struct ResetDrawingOperation: DrawingOperation {
     let shapes: [Shape]
