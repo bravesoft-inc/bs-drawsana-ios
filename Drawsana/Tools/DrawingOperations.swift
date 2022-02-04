@@ -161,3 +161,22 @@ public struct ChangeExplicitWidthOperation: DrawingOperation {
   }
 }
 
+/**
+ reset drawing view
+ */
+public struct ResetDrawingOperation: DrawingOperation {
+    let shapes: [Shape]
+    
+    public init(shapes: [Shape]) {
+        self.shapes = shapes
+    }
+    
+    public func apply(drawing: Drawing) {
+        drawing.shapes.forEach { drawing.remove(shape: $0) }
+    }
+    
+    public func revert(drawing: Drawing) {
+        shapes.forEach { drawing.add(shape: $0) }
+    }
+}
+
