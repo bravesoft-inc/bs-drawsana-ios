@@ -83,32 +83,38 @@ public class TextShapeEditingView: UIView {
   }
 
   public func addStandardControls() {
-    addControl(dragActionType: .delete, view: deleteControlView) { (textView, deleteControlView) in
-      NSLayoutConstraint.activate(deprioritize([
-        deleteControlView.widthAnchor.constraint(equalToConstant: 36),
-        deleteControlView.heightAnchor.constraint(equalToConstant: 36),
-        deleteControlView.rightAnchor.constraint(equalTo: textView.leftAnchor),
-        deleteControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -3),
-      ]))
-    }
-
-    addControl(dragActionType: .resizeAndRotate, view: resizeAndRotateControlView) { (textView, resizeAndRotateControlView) in
-      NSLayoutConstraint.activate(deprioritize([
-        resizeAndRotateControlView.widthAnchor.constraint(equalToConstant: 36),
-        resizeAndRotateControlView.heightAnchor.constraint(equalToConstant: 36),
-        resizeAndRotateControlView.leftAnchor.constraint(equalTo: textView.rightAnchor, constant: 5),
-        resizeAndRotateControlView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 4),
-      ]))
-    }
-
-    addControl(dragActionType: .changeWidth, view: changeWidthControlView) { (textView, changeWidthControlView) in
-      NSLayoutConstraint.activate(deprioritize([
-        changeWidthControlView.widthAnchor.constraint(equalToConstant: 36),
-        changeWidthControlView.heightAnchor.constraint(equalToConstant: 36),
-        changeWidthControlView.leftAnchor.constraint(equalTo: textView.rightAnchor, constant: 5),
-        changeWidthControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -4),
-      ]))
-    }
+      let makeView: (UIImage?) -> UIView = {
+          let view = UIView()
+          view.translatesAutoresizingMaskIntoConstraints = false
+          view.backgroundColor = .clear
+          view.layer.shadowColor = UIColor.black.cgColor
+          view.layer.shadowOffset = CGSize(width: 1, height: 1)
+          view.layer.shadowRadius = 3
+          view.layer.shadowOpacity = 0.5
+          if let image = $0 {
+              view.frame = CGRect(origin: .zero, size: CGSize(width: 16, height: 16))
+              let imageView = UIImageView(image: image)
+              imageView.translatesAutoresizingMaskIntoConstraints = true
+              imageView.frame = view.bounds.insetBy(dx: 4, dy: -4)
+              imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+              imageView.contentMode = .scaleAspectFit
+              imageView.tintColor = .white
+              view.addSubview(imageView)
+          }
+          return view
+      }
+      let buttonSize: CGFloat = 36
+      let halfButtonSize = buttonSize / 2
+      
+      addControl(dragActionType: .resizeAndRotate, view: makeView(UIImage(named: "text_handle_icon"))) { (textView, resizeAndRotateControlView) in
+          resizeAndRotateControlView.layer.anchorPoint = CGPoint(x: 1, y: 1)
+          NSLayoutConstraint.activate([
+              resizeAndRotateControlView.widthAnchor.constraint(equalToConstant: buttonSize),
+              resizeAndRotateControlView.heightAnchor.constraint(equalToConstant: buttonSize),
+              resizeAndRotateControlView.rightAnchor.constraint(equalTo: textView.leftAnchor, constant: halfButtonSize+12),
+              resizeAndRotateControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -3 + halfButtonSize+12),
+          ])
+      }
   }
 
   public func addControl<T: UIView>(dragActionType: DragActionType, view: T, applyConstraints: (UITextView, T) -> Void) {
