@@ -301,24 +301,28 @@ public class TextTool: NSObject, DrawingTool {
     return CGRect(origin: finalOrigin, size: finalSize)
   }
 
-  private func makeTextView() -> TextShapeEditingView {
-    let textView = UITextView()
-    textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
-    textView.textContainerInset = .zero
-    textView.contentInset = .zero
-    textView.isScrollEnabled = false
-    textView.clipsToBounds = true
-    textView.autocorrectionType = .no
-    textView.backgroundColor = .clear
-    textView.delegate = self
-    let editingView = TextShapeEditingView(textView: textView)
-    if let delegate = delegate {
-      delegate.textToolWillUseEditingView(editingView)
-    } else {
-      editingView.addStandardControls()
+    private func makeTextView() -> TextShapeEditingView {
+        let textView = UITextView()
+        textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
+        textView.textContainerInset = .zero
+        textView.contentInset = .zero
+        textView.isScrollEnabled = false
+        textView.clipsToBounds = true
+        textView.autocorrectionType = .no
+        textView.backgroundColor = .clear
+        textView.delegate = self
+        let editingView = TextShapeEditingView(textView: textView)
+        
+        // TODO: delegateではなく、強制的にaddStandardControlsを実行する
+        editingView.addStandardControls()
+        return editingView
+        //    if let delegate = delegate {
+        //      delegate.textToolWillUseEditingView(editingView)
+        //    } else {
+        //      editingView.addStandardControls()
+        //    }
+        //    return editingView
     }
-    return editingView
-  }
 }
 
 extension TextTool: UITextViewDelegate {
