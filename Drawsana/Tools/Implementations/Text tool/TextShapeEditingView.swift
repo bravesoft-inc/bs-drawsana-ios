@@ -115,24 +115,6 @@ public class TextShapeEditingView: UIView {
               resizeAndRotateControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -3 + halfButtonSize+12),
           ])
       }
-
-//    addControl(dragActionType: .resizeAndRotate, view: resizeAndRotateControlView) { (textView, resizeAndRotateControlView) in
-//      NSLayoutConstraint.activate(deprioritize([
-//        resizeAndRotateControlView.widthAnchor.constraint(equalToConstant: 36),
-//        resizeAndRotateControlView.heightAnchor.constraint(equalToConstant: 36),
-//        resizeAndRotateControlView.leftAnchor.constraint(equalTo: textView.rightAnchor, constant: 5),
-//        resizeAndRotateControlView.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 4),
-//      ]))
-//    }
-
-//    addControl(dragActionType: .changeWidth, view: changeWidthControlView) { (textView, changeWidthControlView) in
-//      NSLayoutConstraint.activate(deprioritize([
-//        changeWidthControlView.widthAnchor.constraint(equalToConstant: 36),
-//        changeWidthControlView.heightAnchor.constraint(equalToConstant: 36),
-//        changeWidthControlView.leftAnchor.constraint(equalTo: textView.rightAnchor, constant: 5),
-//        changeWidthControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -4),
-//      ]))
-//    }
   }
 
   public func addControl<T: UIView>(dragActionType: DragActionType, view: T, applyConstraints: (UITextView, T) -> Void) {

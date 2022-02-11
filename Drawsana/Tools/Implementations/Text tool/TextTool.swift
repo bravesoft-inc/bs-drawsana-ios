@@ -313,15 +313,9 @@ public class TextTool: NSObject, DrawingTool {
         textView.delegate = self
         let editingView = TextShapeEditingView(textView: textView)
         
-        // TODO: delegateではなく、強制的にaddStandardControlsを実行する
+        // MEMO: - delegateではなく、強制的にaddStandardControlsを実行する
         editingView.addStandardControls()
         return editingView
-        //    if let delegate = delegate {
-        //      delegate.textToolWillUseEditingView(editingView)
-        //    } else {
-        //      editingView.addStandardControls()
-        //    }
-        //    return editingView
     }
 }
 
