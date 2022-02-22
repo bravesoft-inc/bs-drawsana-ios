@@ -340,4 +340,8 @@ extension TextTool: UITextViewDelegate {
     selectedShape?.isBeingEdited = false
     return true
   }
+  
+  public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    return textView.text.count <= 200
+  }
 }
