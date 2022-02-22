@@ -117,7 +117,7 @@
 		376229822113AD6E0034D0E3 /* Drawing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drawing.swift; sourceTree = "<group>"; };
 		376229862113ADD70034D0E3 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		376229892113AE0C0034D0E3 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
-		3762298A2113D7910034D0E3 /* TextTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTool.swift; sourceTree = "<group>"; };
+		3762298A2113D7910034D0E3 /* TextTool.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = TextTool.swift; sourceTree = "<group>"; tabWidth = 2; };
 		3777F2FC21068A5C009A9AC5 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
 		3777F2FE21068A78009A9AC5 /* DrawingTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingTool.swift; sourceTree = "<group>"; };
 		37885E29210A9C69003A918F /* ArrowTool_EllipseTool_LineTool_RectTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowTool_EllipseTool_LineTool_RectTool.swift; sourceTree = "<group>"; };
