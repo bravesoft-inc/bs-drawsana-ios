@@ -53,14 +53,15 @@ public class SelectionTool: DrawingTool {
   public func apply(context: ToolOperationContext, userSettings: UserSettings) {
     if let shape = context.toolSettings.selectedShape {
       if isUpdatingSelection {
-        if let shapeWithStandardState = shape as? ShapeWithStandardState {
-          context.userSettings.fillColor = shapeWithStandardState.fillColor
-          context.userSettings.strokeColor = shapeWithStandardState.strokeColor
-          context.userSettings.strokeWidth = shapeWithStandardState.strokeWidth
-        } else if let shapeWithStrokeState = shape as? ShapeWithStrokeState {
-          context.userSettings.strokeColor = shapeWithStrokeState.strokeColor
-          context.userSettings.strokeWidth = shapeWithStrokeState.strokeWidth
-        }
+          // 選択モードで選択すると勝手にカラーが変わるため以下はコメントコメントアウト
+//        if let shapeWithStandardState = shape as? ShapeWithStandardState {
+//          context.userSettings.fillColor = shapeWithStandardState.fillColor
+//          context.userSettings.strokeColor = shapeWithStandardState.strokeColor
+//          context.userSettings.strokeWidth = shapeWithStandardState.strokeWidth
+//        } else if let shapeWithStrokeState = shape as? ShapeWithStrokeState {
+//          context.userSettings.strokeColor = shapeWithStrokeState.strokeColor
+//          context.userSettings.strokeWidth = shapeWithStrokeState.strokeWidth
+//        }
       } else {
         shape.apply(userSettings: userSettings)
         context.toolSettings.isPersistentBufferDirty = true
