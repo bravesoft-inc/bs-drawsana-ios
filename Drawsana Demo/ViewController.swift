@@ -78,6 +78,7 @@ class ViewController: UIViewController {
     lazy var selectionTool = { return SelectionTool(delegate: self) }()
     
     lazy var tools: [DrawingTool] = { return [
+        GuideLineTool(),
         PenTool(),
         textTool,
         selectionTool,

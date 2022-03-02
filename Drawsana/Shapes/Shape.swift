@@ -107,6 +107,28 @@ extension ShapeWithStrokeState {
 }
 
 /**
+ Special case of `Shape` where the shape is defined by exactly one point.
+ */
+public protocol ShapeWithOnePoint {
+    var a: CGPoint { get set }
+    
+    var strokeWidth: CGFloat { get set }
+    var imageSize: CGSize { get set }
+}
+
+extension ShapeWithOnePoint {
+    public var rect: CGRect {
+        let x1 = a.x - (strokeWidth / 2)
+        let y1 = a.y - (strokeWidth / 2)
+        return CGRect(x: x1, y: y1, width: strokeWidth, height: strokeWidth)
+    }
+    
+    public var boundingRect: CGRect {
+        return rect.insetBy(dx: -strokeWidth, dy: -strokeWidth)
+    }
+}
+
+/**
  Special case of `Shape` where the shape is defined by exactly two points.
  This case is used to share code between the line, ellipse, and rectangle shapes
  and tools.

@@ -56,4 +56,11 @@ extension UIColor {
 
     return NSString(format:"#%08x", rgb) as String
   }
+    
+}
+
+extension UIColor {
+    class func rgba(red: Int, green: Int, blue: Int, alpha: CGFloat) -> UIColor{
+        return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: alpha)
+    }
 }
