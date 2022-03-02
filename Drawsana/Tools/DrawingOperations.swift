@@ -61,7 +61,7 @@ public struct CopyShapeOperation: DrawingOperation {
       let tmpDrawingView = DrawsanaView()
       tmpDrawingView.drawing.add(shape: shape)
       if let copyShape = tmpDrawingView.lastShape() as? ShapeSelectable {
-          let delta = CGPoint(x: 10.0, y: 10.0)
+          let delta = CGPoint(x: 20.0, y: 20.0)
           copyShape.id = UUID().uuidString
           copyShape.transform = copyShape.transform.translated(by: delta)
           self.shape = copyShape
@@ -69,11 +69,14 @@ public struct CopyShapeOperation: DrawingOperation {
     }
 
     public func apply(drawing: Drawing) {
-      drawing.add(shape: shape)
+        drawing.add(shape: shape)
+        if let copyShape = shape as? ShapeSelectable {
+            drawing.drawingView?.toolSettings.selectedShape = copyShape
+        }
     }
 
     public func revert(drawing: Drawing) {
-      drawing.remove(shape: shape)
+        drawing.remove(shape: shape)
     }
 }
 /**
