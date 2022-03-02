@@ -47,6 +47,35 @@ public struct RemoveShapeOperation: DrawingOperation {
 }
 
 /**
+ Copy a shape to the drawing. Undoing removes the shape.
+ */
+public struct CopyShapeOperation: DrawingOperation {
+    var shape: Shape
+
+    public init(shape: Shape) {
+      self.shape = shape
+      
+      // MEMO: Shapeを別のオブジェクトとして作成するために仮のDrawsanaViewにShapeを設定してオブジェクトを取得
+      // ※Shapeがprotocolでオブジェクトとして取得しずらかったので以下のように対応
+      let tmpDrawingView = DrawsanaView()
+      tmpDrawingView.drawing.add(shape: shape)
+      if let copyShape = tmpDrawingView.lastShape() as? ShapeSelectable {
+          let delta = CGPoint(x: 10.0, y: 10.0)
+          copyShape.id = UUID().uuidString
+          copyShape.transform = copyShape.transform.translated(by: delta)
+          self.shape = copyShape
+      }
+    }
+
+    public func apply(drawing: Drawing) {
+      drawing.add(shape: shape)
+    }
+
+    public func revert(drawing: Drawing) {
+      drawing.remove(shape: shape)
+    }
+}
+/**
  Change the transform of a `ShapeWithTransform`. Undoing sets its transform
  back to its original value.
  */

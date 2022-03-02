@@ -33,15 +33,12 @@ public class DrawingOperationStack {
     }
     
     /// Add an operation to the stack
-    public func apply(operation: DrawingOperation, completion: (() -> Void)? = nil) {
+    public func apply(operation: DrawingOperation) {
         guard operation.shouldAdd(to: self) else { return }
         undoStack.append(operation)
         redoStack = []
         operation.apply(drawing: drawing)
         delegate?.drawingOperationStackDidApply(self, operation: operation)
-        if let completion = completion {
-            completion()
-        }
     }
     
     /// Undo the latest operation, if any

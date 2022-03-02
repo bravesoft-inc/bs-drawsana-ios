@@ -31,6 +31,12 @@ public class Drawing: Codable {
   public var size: CGSize
   public private(set) var shapes: [Shape] = []
 
+    public var drawingView: DrawsanaView? {
+        guard let drawingView = delegate as? DrawsanaView else {
+            return nil
+        }
+        return drawingView
+    }
   /**
    You must set this property if you use any shapes other than the built-in ones
    and you also want to use the `Codable` features of Drawsana. It's simple:

@@ -399,6 +399,20 @@ public class DrawsanaView: UIView {
   }
 }
 
+extension DrawsanaView {
+    public func lastShape() -> Shape? {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(drawing)
+            drawing = try JSONDecoder().decode(Drawing.self, from: data)
+            return drawing.shapes.last
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+}
+
 // MARK: DrawsanaViewShapeUpdating implementation
 
 extension DrawsanaView: DrawsanaViewShapeUpdating {
