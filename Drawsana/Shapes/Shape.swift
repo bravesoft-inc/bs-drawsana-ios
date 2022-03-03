@@ -124,7 +124,7 @@ extension ShapeWithOnePoint {
     }
     
     public var boundingRect: CGRect {
-        return rect.insetBy(dx: -strokeWidth, dy: -strokeWidth)
+        return rect.insetBy(dx: -(strokeWidth * 2.5), dy: -(strokeWidth * 2.5))
     }
 }
 
