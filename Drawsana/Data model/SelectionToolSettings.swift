@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 public class SelectionToolSettings {
-    static let shared: SelectionToolSettings = .init()
+    public static let shared: SelectionToolSettings = .init()
     
     public var rotateButtonImage: UIImage?
     public var translationButtonImage: UIImage?
