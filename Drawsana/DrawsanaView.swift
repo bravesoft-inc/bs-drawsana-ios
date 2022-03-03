@@ -193,14 +193,14 @@ public class DrawsanaView: UIView {
     selectionIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
     let selectionLayer = CAShapeLayer()
-    selectionLayer.strokeColor = UIColor.black.cgColor
-    selectionLayer.lineWidth = 2
-    selectionLayer.lineDashPattern = [4, 4]
+    selectionLayer.strokeColor = UIColor.white.withAlphaComponent(0.5).cgColor
+    selectionLayer.lineWidth = 1
+//    selectionLayer.lineDashPattern = [4, 4]
     selectionLayer.fillColor = nil
     selectionLayer.frame = selectionIndicatorView.bounds
     selectionLayer.path = UIBezierPath(rect: selectionIndicatorView.bounds).cgPath
     selectionIndicatorView.layer.addSublayer(selectionLayer)
-    selectionIndicatorView.layer.shadowColor = UIColor.white.cgColor
+    selectionIndicatorView.layer.shadowColor = UIColor.black.cgColor
     selectionIndicatorView.layer.shadowOffset = .zero
     selectionIndicatorView.layer.shadowRadius = 1
     selectionIndicatorView.layer.shadowOpacity = 1
