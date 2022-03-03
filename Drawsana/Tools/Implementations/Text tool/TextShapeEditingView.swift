@@ -12,7 +12,7 @@ public class TextShapeEditingView: UIView {
   /// Upper left 'delete' button for text. You may add any subviews you want,
   /// set border & background color, etc.
   public let deleteControlView = UIView()
-  /// Lower right 'rotate' button for text. You may add any subviews you want,
+  /// Upper right 'rotate' button for text. You may add any subviews you want,
   /// set border & background color, etc.
   public let resizeAndRotateControlView = UIView()
   /// Right side handle to change width of text. You may add any subviews you
@@ -21,6 +21,11 @@ public class TextShapeEditingView: UIView {
 
   /// The `UITextView` that the user interacts with during editing
   public let textView: UITextView
+    
+  private let buttonSize: CGFloat = 36
+  private var halfButtonSize: CGFloat {
+      buttonSize / 2
+  }
 
   public enum DragActionType {
     case delete
@@ -49,7 +54,7 @@ public class TextShapeEditingView: UIView {
     deleteControlView.backgroundColor = .red
 
     resizeAndRotateControlView.translatesAutoresizingMaskIntoConstraints = false
-    resizeAndRotateControlView.backgroundColor = .white
+    resizeAndRotateControlView.backgroundColor = .blue
 
     changeWidthControlView.translatesAutoresizingMaskIntoConstraints = false
     changeWidthControlView.backgroundColor = .yellow
@@ -81,12 +86,11 @@ public class TextShapeEditingView: UIView {
   override public func resignFirstResponder() -> Bool {
     return textView.resignFirstResponder()
   }
-
+    
   public func addStandardControls() {
       let makeView: (UIImage?) -> UIView = {
           let view = UIView()
           view.translatesAutoresizingMaskIntoConstraints = false
-          view.backgroundColor = .clear
           view.layer.shadowColor = UIColor.black.cgColor
           view.layer.shadowOffset = CGSize(width: 1, height: 1)
           view.layer.shadowRadius = 3
@@ -98,22 +102,35 @@ public class TextShapeEditingView: UIView {
               imageView.frame = view.bounds.insetBy(dx: 4, dy: -4)
               imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
               imageView.contentMode = .scaleAspectFit
-              imageView.tintColor = .white
               view.addSubview(imageView)
           }
           return view
       }
-      let buttonSize: CGFloat = 36
-      let halfButtonSize = buttonSize / 2
       
       addControl(dragActionType: .resizeAndRotate, view: makeView(UIImage(named: "text_handle_icon"))) { (textView, resizeAndRotateControlView) in
-          resizeAndRotateControlView.layer.anchorPoint = CGPoint(x: 1, y: 1)
-          NSLayoutConstraint.activate([
-              resizeAndRotateControlView.widthAnchor.constraint(equalToConstant: buttonSize),
-              resizeAndRotateControlView.heightAnchor.constraint(equalToConstant: buttonSize),
-              resizeAndRotateControlView.rightAnchor.constraint(equalTo: textView.leftAnchor, constant: halfButtonSize+12),
-              resizeAndRotateControlView.bottomAnchor.constraint(equalTo: textView.topAnchor, constant: -3 + halfButtonSize+12),
-          ])
+          resizeAndRotateControlView.layer.anchorPoint = .zero
+          resizeAndRotateControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
+      }
+    }
+
+  /// The user has changed the transform of the selected shape. You may leave
+  /// this method empty, but unless you want your text controls to scale with
+  /// the text, you'll need to do some math and apply some inverse scaling
+  /// transforms here.
+    public func textToolDidUpdateEditingViewTransform(_ transform: ShapeTransform) {
+      for control in controls {
+          
+          let translatedPointX = halfButtonSize * transform.scale - halfButtonSize
+          
+          // -4はTextToolでTextViewを綺麗に表示させるために以下のコードを書いているため
+          // TextTool.swift
+          // updateShapeFrameのshape.boundingRect.origin.x += 2
+          // TextToolのeditingView.bounds.size.width += 3
+          // + selectedShapeのborderWidth = 1
+          
+          let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
+          
+          control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
       }
   }
 
@@ -132,11 +149,4 @@ public class TextShapeEditingView: UIView {
     }
     return nil
   }
-}
-
-private func deprioritize(_ constraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
-  for constraint in constraints {
-    constraint.priority = .defaultLow
-  }
-  return constraints
 }

@@ -19,17 +19,6 @@ public protocol TextToolDelegate: AnyObject {
   /// point.
   func textToolDidTapAway(tappedPoint: CGPoint)
 
-  /// The text tool is about to present a text editing view. You may configure
-  /// it however you like. If you're just starting out, you probably want to
-  /// call `editingView.addStandardControls()` to add the delete button and the
-  /// two resize handles.
-  func textToolWillUseEditingView(_ editingView: TextShapeEditingView)
-
-  /// The user has changed the transform of the selected shape. You may leave
-  /// this method empty, but unless you want your text controls to scale with
-  /// the text, you'll need to do some math and apply some inverse scaling
-  /// transforms here.
-  func textToolDidUpdateEditingViewTransform(_ editingView: TextShapeEditingView, transform: ShapeTransform)
 }
 
 public class TextTool: NSObject, DrawingTool {
@@ -250,11 +239,8 @@ public class TextTool: NSObject, DrawingTool {
       translationX: -shape.boundingRect.size.width / 2,
       y: -shape.boundingRect.size.height / 2
     ).concatenating(shape.transform.affineTransform)
-
-    delegate?.textToolDidUpdateEditingViewTransform(editingView, transform: shape.transform)
-
-    editingView.setNeedsLayout()
-    editingView.layoutIfNeeded()
+    
+    editingView.textToolDidUpdateEditingViewTransform(shape.transform)
   }
 
   func computeBounds() -> CGRect {
