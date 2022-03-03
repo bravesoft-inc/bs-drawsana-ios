@@ -49,6 +49,7 @@
 		37EB4F0721064A6000E10461 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37EB4F0521064A6000E10461 /* LaunchScreen.storyboard */; };
 		37EB4F1A21064A8100E10461 /* Drawsana.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 37EB4ED9210649E100E10461 /* Drawsana.framework */; };
 		37EB4F1B21064A8100E10461 /* Drawsana.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 37EB4ED9210649E100E10461 /* Drawsana.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C3873E2027D0B26300B9FFB5 /* SelectionToolSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3873E1F27D0B26300B9FFB5 /* SelectionToolSettings.swift */; };
 		C3B57947278D8A910035FC37 /* DrawingToolForShapeWithOnePoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B57946278D8A910035FC37 /* DrawingToolForShapeWithOnePoint.swift */; };
 		C3B57949278D8AC10035FC37 /* GuideLineTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B57948278D8AC10035FC37 /* GuideLineTool.swift */; };
 		C3B5794B278D8AF50035FC37 /* GuideLineShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B5794A278D8AF50035FC37 /* GuideLineShape.swift */; };
@@ -140,6 +141,7 @@
 		37EB4F0321064A6000E10461 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		37EB4F0621064A6000E10461 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		37EB4F0821064A6000E10461 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3873E1F27D0B26300B9FFB5 /* SelectionToolSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionToolSettings.swift; sourceTree = "<group>"; };
 		C3B57946278D8A910035FC37 /* DrawingToolForShapeWithOnePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingToolForShapeWithOnePoint.swift; sourceTree = "<group>"; };
 		C3B57948278D8AC10035FC37 /* GuideLineTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideLineTool.swift; sourceTree = "<group>"; };
 		C3B5794A278D8AF50035FC37 /* GuideLineShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideLineShape.swift; sourceTree = "<group>"; };
@@ -281,6 +283,7 @@
 				376229802113AD570034D0E3 /* ToolOperationContext.swift */,
 				37362D5D2118D8A3003E5ACA /* ToolSettings.swift */,
 				376229862113ADD70034D0E3 /* UserSettings.swift */,
+				C3873E1F27D0B26300B9FFB5 /* SelectionToolSettings.swift */,
 			);
 			path = "Data model";
 			sourceTree = "<group>";
@@ -313,11 +316,11 @@
 			isa = PBXGroup;
 			children = (
 				37EB4EF3210649FC00E10461 /* DrawsanaView.swift */,
+				3762297F2113ACE70034D0E3 /* _Support */,
 				376229882113ADEA0034D0E3 /* Data model */,
 				376229842113ADB30034D0E3 /* Helpers */,
 				3762296F2113AA4C0034D0E3 /* Shapes */,
 				3762297B2113ABF20034D0E3 /* Tools */,
-				3762297F2113ACE70034D0E3 /* _Support */,
 			);
 			path = Drawsana;
 			sourceTree = "<group>";
@@ -525,6 +528,7 @@
 				3777F2FF21068A78009A9AC5 /* DrawingTool.swift in Sources */,
 				3706B15E211CF29500D41622 /* DrawingToolForShapeWithTwoPoints.swift in Sources */,
 				3777F2FD21068A5C009A9AC5 /* Shape.swift in Sources */,
+				C3873E2027D0B26300B9FFB5 /* SelectionToolSettings.swift in Sources */,
 				37885E2C210A9C95003A918F /* PenTool_EraserTool.swift in Sources */,
 				37362D5C21151684003E5ACA /* TextShape.swift in Sources */,
 				371BE7D02123643100861596 /* ImmediatePanGestureRecognizer.swift in Sources */,

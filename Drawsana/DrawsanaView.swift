@@ -208,6 +208,8 @@ public class DrawsanaView: UIView {
 
     let panGR = ImmediatePanGestureRecognizer(target: self, action: #selector(didPan(sender:)))
     addGestureRecognizer(panGR)
+    
+    SelectionToolSettings.shared.rotateButtonImage = UIImage(named: "text_handle_icon")
   }
 
   public override func layoutSubviews() {

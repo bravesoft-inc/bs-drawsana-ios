@@ -107,7 +107,7 @@ public class TextShapeEditingView: UIView {
           return view
       }
       
-      addControl(dragActionType: .resizeAndRotate, view: makeView(UIImage(named: "text_handle_icon"))) { (textView, resizeAndRotateControlView) in
+      addControl(dragActionType: .resizeAndRotate, view: makeView(SelectionToolSettings.shared.rotateButtonImage)) { (textView, resizeAndRotateControlView) in
           resizeAndRotateControlView.layer.anchorPoint = .zero
           resizeAndRotateControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
       }
