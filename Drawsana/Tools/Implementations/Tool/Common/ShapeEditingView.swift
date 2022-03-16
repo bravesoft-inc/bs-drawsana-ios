@@ -92,6 +92,11 @@ public class ShapeEditingView: UIView {
             resizeAndRotateControlView.layer.anchorPoint = .zero
             resizeAndRotateControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
         }
+        
+        addControl(dragActionType: .delete, view: makeView(SelectionToolSettings.shared.deleteButtonImage)) { (view, deleteControlView) in
+            deleteControlView.layer.anchorPoint = .zero
+            deleteControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
+        }
     }
     
     /// The user has changed the transform of the selected shape. You may leave
@@ -103,14 +108,16 @@ public class ShapeEditingView: UIView {
             switch control.dragActionType {
             case .resizeAndRotate:
                 control.view.isHidden = shape is GuideLineShape
+                let translatedPointX = halfButtonSize * transform.scale - halfButtonSize
+                let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
+                control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
+            case .delete:
+                let translatedPointX = (boundingRect.width + halfButtonSize - 4) * transform.scale
+                let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
+                control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
             default:
                 break
             }
-            
-            let translatedPointX = halfButtonSize * transform.scale - halfButtonSize
-            let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
-            
-            control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
         }
     }
     

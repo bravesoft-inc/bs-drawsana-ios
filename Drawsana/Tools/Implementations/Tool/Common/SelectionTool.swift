@@ -96,6 +96,8 @@ public class SelectionTool: NSObject, DrawingTool {
         guard let selectedShape = context.toolSettings.selectedShape else { return }
         if let dragActionType = editingView.getDragActionType(point: point), case .resizeAndRotate = dragActionType, !(selectedShape is GuideLineShape) {
             dragHandler = ResizeAndRotateHandler(shape: selectedShape, selectionTool: self)
+        } else if let dragActionType = editingView.getDragActionType(point: point), case .delete = dragActionType {
+            applyRemoveShapeOperation(context: context)
         } else {
             guard selectedShape.hitTest(point: point) else {
                 context.toolSettings.selectedShape = nil
@@ -134,12 +136,21 @@ public class SelectionTool: NSObject, DrawingTool {
         selectedShape = newSelectedShape
         if let selectedShape = selectedShape {
             context.toolSettings.interactiveView = editingView
-            updateShapeEditingView(selectedShape: selectedShape)
         } else {
             context.toolSettings.interactiveView = nil
         }
         dragHandler = nil
     }
+    
+    private func applyRemoveShapeOperation(context: ToolOperationContext) {
+      guard let shape = selectedShape else { return }
+      context.operationStack.apply(operation: RemoveShapeOperation(shape: shape))
+      selectedShape = nil
+      context.toolSettings.selectedShape = nil
+      context.toolSettings.isPersistentBufferDirty = true
+      context.toolSettings.interactiveView = nil
+    }
+
 }
 
 extension SelectionTool {
@@ -158,7 +169,11 @@ extension SelectionTool {
         editingView.bounds = selectionIndicatorView.bounds
         editingView.transform = shape.transform.affineTransform
         
-        editingView.selectionToolDidUpdateEditingView(boundingRect: shape.selectionBoundingRect, shape: shape, transform: shape.transform)
+        var boundingRect = shape.selectionBoundingRect
+        if shape is TextShape {
+            boundingRect = shape.boundingRect
+        }
+        editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shape.transform)
     }
     
     private func updateShapeEditingView(selectedShape: ShapeSelectable) {

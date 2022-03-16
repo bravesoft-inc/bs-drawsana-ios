@@ -243,7 +243,7 @@ public class TextTool: NSObject, DrawingTool {
       y: -shape.boundingRect.size.height / 2
     ).concatenating(shape.transform.affineTransform)
     
-    editingView.textToolDidUpdateEditingViewTransform(shape.transform)
+    editingView.textToolDidUpdateEditingViewTransform(boundingRect: shape.boundingRect, transform: shape.transform)
   }
 
   func computeBounds() -> CGRect {

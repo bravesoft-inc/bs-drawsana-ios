@@ -13,5 +13,5 @@ public class SelectionToolSettings {
     public static let shared: SelectionToolSettings = .init()
     
     public var rotateButtonImage: UIImage?
-    public var translationButtonImage: UIImage?
+    public var deleteButtonImage: UIImage?
 }

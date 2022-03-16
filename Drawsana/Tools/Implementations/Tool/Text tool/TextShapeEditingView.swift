@@ -112,27 +112,32 @@ public class TextShapeEditingView: UIView {
           resizeAndRotateControlView.layer.anchorPoint = .zero
           resizeAndRotateControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
       }
+      
+      addControl(dragActionType: .delete, view: makeView(SelectionToolSettings.shared.deleteButtonImage)) { (view, deleteControlView) in
+          deleteControlView.layer.anchorPoint = .zero
+          deleteControlView.frame = CGRect(origin: .init(x: -halfButtonSize, y: -halfButtonSize), size: .init(width: buttonSize, height: buttonSize))
+      }
     }
 
   /// The user has changed the transform of the selected shape. You may leave
   /// this method empty, but unless you want your text controls to scale with
   /// the text, you'll need to do some math and apply some inverse scaling
   /// transforms here.
-    public func textToolDidUpdateEditingViewTransform(_ transform: ShapeTransform) {
-      for control in controls {
-          
-          let translatedPointX = halfButtonSize * transform.scale - halfButtonSize
-          
-          // -4はTextToolでTextViewを綺麗に表示させるために以下のコードを書いているため
-          // TextTool.swift
-          // updateShapeFrameのshape.boundingRect.origin.x += 2
-          // TextToolのeditingView.bounds.size.width += 3
-          // + selectedShapeのborderWidth = 1
-          
-          let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
-          
-          control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
-      }
+    public func textToolDidUpdateEditingViewTransform(boundingRect: CGRect, transform: ShapeTransform) {
+        for control in controls {
+            switch control.dragActionType {
+            case .resizeAndRotate:
+                let translatedPointX = halfButtonSize * transform.scale - halfButtonSize
+                let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
+                control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
+            case .delete:
+                let translatedPointX = (boundingRect.width + halfButtonSize - 4) * transform.scale
+                let translatedPointY = (halfButtonSize - 4) * transform.scale - halfButtonSize
+                control.view.transform = CGAffineTransform(scaleX: 1/transform.scale, y: 1/transform.scale).translatedBy(x: translatedPointX, y: translatedPointY)
+            default:
+                break
+            }
+        }
   }
 
   public func addControl<T: UIView>(dragActionType: DragActionType, view: T, applyConstraints: (UITextView, T) -> Void) {

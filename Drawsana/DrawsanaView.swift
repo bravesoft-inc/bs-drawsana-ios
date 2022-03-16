@@ -210,6 +210,7 @@ public class DrawsanaView: UIView {
     addGestureRecognizer(panGR)
     
     SelectionToolSettings.shared.rotateButtonImage = UIImage(named: "text_handle_icon")
+    SelectionToolSettings.shared.deleteButtonImage = UIImage(named: "icon_delete")
   }
 
   public override func layoutSubviews() {
