@@ -49,6 +49,7 @@ public class TextShapeEditingView: UIView {
     layer.isOpaque = false
 
     textView.translatesAutoresizingMaskIntoConstraints = false
+    textView.backgroundColor = .clear
 
     deleteControlView.translatesAutoresizingMaskIntoConstraints = false
     deleteControlView.backgroundColor = .red

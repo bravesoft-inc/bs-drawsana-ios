@@ -36,6 +36,8 @@ public class LineShape:
   public var dashLengths: [CGFloat]?
   public var arrowStyle: ArrowStyle?
   public var transform: ShapeTransform = .identity
+  public var selectionBoundingRect: CGRect = .zero
+  public var boundingRectOrigin: CGPoint = .zero
 
   public init() {
   }

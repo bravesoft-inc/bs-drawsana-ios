@@ -371,11 +371,19 @@ extension ViewController: SelectionToolDelegate {
     /// When a shape is double-tapped by the selection tool, and it's text,
     /// begin editing the text
     func selectionToolDidTapOnAlreadySelectedShape(_ shape: ShapeSelectable) {
-        if shape as? TextShape != nil {
-            drawingView.set(tool: textTool, shape: shape)
-        } else {
+//        if shape as? TextShape != nil {
+//            drawingView.set(tool: textTool, shape: shape)
+//        } else {
             drawingView.toolSettings.selectedShape = nil
-        }
+//        }
+    }
+    
+    func selectionToolDidTapTextShape(_ shape: ShapeSelectable) {
+        drawingView.set(tool: textTool, shape: shape)
+    }
+    
+    func selectionIndicatorView() -> UIView {
+        drawingView.selectionIndicatorView
     }
 }
 
@@ -389,7 +397,13 @@ extension ViewController: TextToolDelegate {
     /// When user taps away from text, switch to the selection tool so they can
     /// tap anything they want.
     func textToolDidTapAway(tappedPoint: CGPoint) {
-        drawingView.set(tool: self.selectionTool)
+        if let shape = drawingView.drawing.getShape(at: tappedPoint) as? TextShape {
+            drawingView.set(tool: textTool, shape: shape, isForce: true)
+        } else if let shape = drawingView.drawing.getShape(at: tappedPoint) as? ShapeSelectable {
+            drawingView.set(tool: selectionTool, shape: shape)
+        } else {
+            drawingView.set(tool: selectionTool)
+        }
     }
     
     func textToolWillUseEditingView(_ editingView: TextShapeEditingView) {

@@ -40,8 +40,23 @@ open class DrawingToolForShapeWithOnePoint: DrawingTool {
 
   public func handleDragEnd(context: ToolOperationContext, point: CGPoint) {
     guard var shape = shapeInProgress else { return }
-    context.operationStack.apply(operation: AddShapeOperation(shape: shape))
     shape.a = point
+      
+      let translation = shape.rect.origin
+      let boundingRect = shape.boundingRect
+      
+      var resetRectOrigin = translation
+      resetRectOrigin.x += shape.rect.size.width / 2
+      resetRectOrigin.y += shape.rect.size.height / 2
+      
+      shape.a = shape.a - resetRectOrigin
+      
+      if let selectableShape = shape as? ShapeSelectable {
+          selectableShape.transform.translation = resetRectOrigin
+          selectableShape.boundingRectOrigin = resetRectOrigin
+          selectableShape.selectionBoundingRect = CGRect(origin: .zero, size: boundingRect.size)
+          context.operationStack.apply(operation: AddShapeOperation(shape: selectableShape))
+      }
     shapeInProgress = nil
   }
 

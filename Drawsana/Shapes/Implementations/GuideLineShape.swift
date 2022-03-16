@@ -31,7 +31,8 @@ public class GuideLineShape:
     public var dashPhase: CGFloat?
     public var dashLengths: [CGFloat]?
     public var transform: ShapeTransform = .identity
-    
+    public var selectionBoundingRect: CGRect = .zero
+    public var boundingRectOrigin: CGPoint = .zero
     
     public var imageSize: CGSize = .zero
     public init() {

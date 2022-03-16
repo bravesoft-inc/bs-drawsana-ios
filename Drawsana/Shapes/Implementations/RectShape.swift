@@ -31,6 +31,8 @@ public class RectShape:
   public var dashPhase: CGFloat?
   public var dashLengths: [CGFloat]?
   public var transform: ShapeTransform = .identity
+  public var selectionBoundingRect: CGRect = .zero
+  public var boundingRectOrigin: CGPoint = .zero
 
   public init() {
 
@@ -84,7 +86,7 @@ public class RectShape:
 
   public func render(in context: CGContext) {
     transform.begin(context: context)
-
+      
     if let fillColor = fillColor {
       context.setFillColor(fillColor.cgColor)
       context.addRect(rect)

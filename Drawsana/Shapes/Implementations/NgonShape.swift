@@ -32,6 +32,8 @@ public class NgonShape:
     public var dashLengths: [CGFloat]?
     public var transform: ShapeTransform = .identity
     public var sides: Int!
+    public var selectionBoundingRect: CGRect = .zero
+    public var boundingRectOrigin: CGPoint = .zero
 
     public var boundingRect: CGRect {
         return squareRect

@@ -37,13 +37,13 @@ public class TextTool: NSObject, DrawingTool {
   // MARK: Internal state
 
   /// The text tool has 3 different behaviors on drag depending on where your
-  /// touch starts. See `DragHandler.swift` for their implementations.
-  private var dragHandler: DragHandler?
+  /// touch starts. See `DragTextHandler.swift` for their implementations.
+  private var dragHandler: DragTextHandler?
   private var selectedShape: TextShape?
   private var originalText = ""
   private var maxWidth: CGFloat = 320  // updated from drawing.size
   private weak var shapeUpdater: DrawsanaViewShapeUpdating?
-  // internal for use by DragHandler subclasses
+  // internal for use by DragTextHandler subclasses
   internal lazy var editingView: TextShapeEditingView = makeTextView()
 
   public init(delegate: TextToolDelegate? = nil) {
@@ -81,8 +81,8 @@ public class TextTool: NSObject, DrawingTool {
       applyRemoveShapeOperation(context: context)
       delegate?.textToolDidTapAway(tappedPoint: point)
     } else if shape.hitTest(point: point) {
-      // TODO: Forward tap to editingView.textView somehow, or manually set
-      // the cursor point
+      // Forward tap to editingView.textView somehow, or manually set
+      editingView.becomeFirstResponder()
     } else {
       finishEditing(context: context)
       selectedShape = nil
@@ -108,11 +108,11 @@ public class TextTool: NSObject, DrawingTool {
   public func handleDragStart(context: ToolOperationContext, point: CGPoint) {
     guard let shape = selectedShape else { return }
     if let dragActionType = editingView.getDragActionType(point: point), case .resizeAndRotate = dragActionType {
-      dragHandler = ResizeAndRotateHandler(shape: shape, textTool: self)
+      dragHandler = ResizeAndRotateTextHandler(shape: shape, textTool: self)
     } else if let dragActionType = editingView.getDragActionType(point: point), case .changeWidth = dragActionType {
-      dragHandler = ChangeWidthHandler(shape: shape, textTool: self)
+      dragHandler = ChangeWidthTextHandler(shape: shape, textTool: self)
     } else if shape.hitTest(point: point) {
-      dragHandler = MoveHandler(shape: shape, textTool: self)
+      dragHandler = MoveTextHandler(shape: shape, textTool: self)
     } else {
       dragHandler = nil
     }
@@ -182,7 +182,10 @@ public class TextTool: NSObject, DrawingTool {
 
     // Prepare interactive editing view
     context.toolSettings.interactiveView = editingView
-    editingView.becomeFirstResponder()
+    
+    if originalText.count == 0 {
+      editingView.becomeFirstResponder()
+    }
   }
 
   /// If shape text has changed, notify operation stack so that undo works
@@ -298,8 +301,6 @@ public class TextTool: NSObject, DrawingTool {
         textView.backgroundColor = .clear
         textView.delegate = self
         let editingView = TextShapeEditingView(textView: textView)
-        
-        // MEMO: - delegateではなく、強制的にaddStandardControlsを実行する
         editingView.addStandardControls()
         return editingView
     }

@@ -8,7 +8,7 @@
 
 import CoreGraphics
 
-class DragHandler {
+class DragTextHandler {
   let shape: TextShape
   weak var textTool: TextTool?
   var startPoint: CGPoint = .zero
@@ -39,7 +39,7 @@ class DragHandler {
 }
 
 /// User is dragging the text itself to a new location
-class MoveHandler: DragHandler {
+class MoveTextHandler: DragTextHandler {
   private var originalTransform: ShapeTransform
 
   override init(
@@ -73,7 +73,7 @@ class MoveHandler: DragHandler {
 
 /// User is dragging the lower-right handle to change the size and rotation
 /// of the text box
-class ResizeAndRotateHandler: DragHandler {
+class ResizeAndRotateTextHandler: DragTextHandler {
   private var originalTransform: ShapeTransform
 
   override init(
@@ -85,17 +85,35 @@ class ResizeAndRotateHandler: DragHandler {
   }
 
   private func getResizeAndRotateTransform(point: CGPoint) -> ShapeTransform {
+      
+//          print("----------------------------------------")
+//          print("startPoint:\(startPoint)")
+//          print("point:\(point)")
+//          print("shape.transform.translation:\(shape.transform.translation)")
+//          print("----------------------------------------")
+      
     let originalDelta = startPoint - shape.transform.translation
     let newDelta = point - shape.transform.translation
     let originalDistance = originalDelta.length
     let newDistance = newDelta.length
+      
+      
     let originalAngle = atan2(originalDelta.y, originalDelta.x)
     let newAngle = atan2(newDelta.y, newDelta.x)
     let scaleChange = newDistance / originalDistance
     let angleChange = newAngle - originalAngle
-    return originalTransform.scaled(by: scaleChange).rotated(by: angleChange)
+    let transform = originalTransform.scaled(by: scaleChange).rotated(by: angleChange)
+      
+//          print("----------------------------------------")
+//          print("originalDelta:\(originalDelta)")
+//          print("newDelta:\(newDelta)")
+//          print("originalAngle:\(originalAngle)")
+//          print("newAngle:\(newAngle)")
+//          print("angleChange:\(angleChange)")
+//          print("rotation: \(angle * 180 / .pi)")
+//          print("----------------------------------------")
+    return transform
   }
-
   override func handleDragContinue(context: ToolOperationContext, point: CGPoint, velocity: CGPoint) {
     shape.transform = getResizeAndRotateTransform(point: point)
     textTool?.updateTextView()
@@ -117,7 +135,7 @@ class ResizeAndRotateHandler: DragHandler {
 
 /// User is dragging the middle-right handle to change the width of the text
 /// box
-class ChangeWidthHandler: DragHandler {
+class ChangeWidthTextHandler: DragTextHandler {
   private var originalWidth: CGFloat?
   private var originalBoundingRect: CGRect = .zero
 

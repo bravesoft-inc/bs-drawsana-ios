@@ -33,6 +33,8 @@ public class TextShape: Shape, ShapeSelectable {
   public var isBeingEdited: Bool = false
 
   public var boundingRect: CGRect = .zero
+  public var selectionBoundingRect: CGRect = .zero
+  public var boundingRectOrigin: CGPoint = .zero
 
   var font: UIFont {
     return UIFont(name: fontName, size: fontSize)!

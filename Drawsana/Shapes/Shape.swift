@@ -39,12 +39,20 @@ public protocol Shape: AnyObject, Codable {
  `boundingRect` property and have `hitTest` implemented automatically.
  */
 public protocol ShapeWithBoundingRect: Shape {
+  var selectionBoundingRect: CGRect { get set }
+  var boundingRectOrigin: CGPoint { get set }
   var boundingRect: CGRect { get }
 }
 
 extension ShapeWithBoundingRect {
   public func hitTest(point: CGPoint) -> Bool {
-    return boundingRect.contains(point)
+      if selectionBoundingRect == .zero {
+          return boundingRect.contains(point)
+      }
+      var selectionBounding = selectionBoundingRect
+      selectionBounding.origin.x -= selectionBounding.width / 2
+      selectionBounding.origin.y -= selectionBounding.height / 2
+      return selectionBounding.contains(point)
   }
 }
 
@@ -68,7 +76,13 @@ public protocol ShapeSelectable: ShapeWithBoundingRect, ShapeWithTransform {
 
 extension ShapeSelectable {
   public func hitTest(point: CGPoint) -> Bool {
-    return boundingRect.applying(transform.affineTransform).contains(point)
+      if selectionBoundingRect == .zero {
+          return boundingRect.applying(transform.affineTransform).contains(point)
+      }
+      var selectionBounding = selectionBoundingRect
+      selectionBounding.origin.x -= selectionBounding.width / 2
+      selectionBounding.origin.y -= selectionBounding.height / 2
+    return selectionBounding.applying(transform.affineTransform).contains(point)
   }
 }
 

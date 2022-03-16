@@ -39,6 +39,9 @@ public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
   public var segments: [PenLineSegment] = []
   public var isEraser: Bool = false
   public var transform: ShapeTransform = .identity
+  public var selectionBoundingRect: CGRect = .zero
+  public var boundingRectOrigin: CGPoint = .zero
+    
 
   public var boundingRect: CGRect {
     var minX = start.x, maxX = start.x
@@ -122,30 +125,39 @@ public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
 
     var lastSegment: PenLineSegment?
     if onlyLast, segments.count > 1 {
-      lastSegment = segments[segments.count - 2]
+        let tmplastSegment = segments[segments.count - 2]
+        lastSegment = tmplastSegment
+        lastSegment?.a = tmplastSegment.a - boundingRectOrigin
+        lastSegment?.b = tmplastSegment.b - boundingRectOrigin
+        
     }
     var lastWidth = segments[0].width
     var hasStroked = false // make sure we finally stroke the path
     for (i, segment) in (onlyLast ? [segments.last!] : segments).enumerated() {
+        
+        var calculateSegment = segment
+        calculateSegment.a = segment.a - boundingRectOrigin
+        calculateSegment.b = segment.b - boundingRectOrigin
+        
       hasStroked = false
-      let needsStroke = segment.width != lastWidth
-      context.setLineWidth(segment.width)
+      let needsStroke = calculateSegment.width != lastWidth
+      context.setLineWidth(calculateSegment.width)
       if let previousMid = lastSegment?.midPoint {
-        let currentMid = segment.midPoint
+        let currentMid = calculateSegment.midPoint
         context.move(to: previousMid)
-        context.addQuadCurve(to: currentMid, control: segment.a)
+        context.addQuadCurve(to: currentMid, control: calculateSegment.a)
         // Usually we only draw up to the mid point of the segment, but if the
         // shape is done and this is the last segment, go ahead and draw a line
         // to the end
         if i == segments.count - 1 && isFinished {
-          context.addLine(to: segment.b)
+          context.addLine(to: calculateSegment.b)
         }
       } else if segments.count == 1 {
-        context.move(to: segment.a)
-        context.addLine(to: segment.b)
+        context.move(to: calculateSegment.a)
+        context.addLine(to: calculateSegment.b)
       } else {
-        context.move(to: segment.a)
-        context.addLine(to: segment.midPoint)
+        context.move(to: calculateSegment.a)
+        context.addLine(to: calculateSegment.midPoint)
       }
 
       if needsStroke {
@@ -153,8 +165,8 @@ public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
         hasStroked = true
       }
 
-      lastWidth = segment.width
-      lastSegment = segment
+      lastWidth = calculateSegment.width
+      lastSegment = calculateSegment
     }
 
     if !hasStroked {

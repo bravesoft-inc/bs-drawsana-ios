@@ -224,8 +224,8 @@ public class DrawsanaView: UIView {
 
   /// Set the active tool to a new value. If you pass `shape`, it is passed on
   /// to the tool's `DrawingTool.activate(context:shape:)` method.
-  public func set(tool: DrawingTool, shape: Shape? = nil) {
-    if let oldTool = self.tool, tool === oldTool {
+  public func set(tool: DrawingTool, shape: Shape? = nil, isForce: Bool = false) {
+    if let oldTool = self.tool, tool === oldTool, isForce == false {
       return
     }
     DispatchQueue.main.async {
@@ -348,10 +348,18 @@ public class DrawsanaView: UIView {
       return
     }
 
+      var boundingRect = shape.boundingRect
+      
+      if self.tool is SelectionTool && !(shape is TextShape) {
+          boundingRect = shape.selectionBoundingRect
+          boundingRect.origin.x -= boundingRect.width / 2
+          boundingRect.origin.y -= boundingRect.height / 2
+      }
+      
     // Warning: hand-wavy math ahead
 
     // First, get the size and bounding rect position of the selected shape
-    var selectionBounds = shape.boundingRect.insetBy(
+    var selectionBounds = boundingRect.insetBy(
       dx: selectionIndicatorInset.x,
       dy: selectionIndicatorInset.y)
     let offset = selectionBounds.origin
@@ -374,20 +382,24 @@ public class DrawsanaView: UIView {
      to add `offset` from above with `shape.transform.translation` to arrive
      at the right final translation.
      */
+      
+      
+      let translation = offset + shape.transform.translation +
+      // Account for the coordinate system being anchored in the middle
+      CGPoint(x: -bounds.size.width * selectionIndicatorAnchorPointOffset.x, y: -bounds.size.height * selectionIndicatorAnchorPointOffset.y) +
+      // We've just moved the CENTER of the selection view to the UPPER LEFT
+      // of the shape, so adjust by half the selection size:
+      CGPoint(x: selectionBounds.size.width / 2, y: selectionBounds.size.height / 2)
+      
     selectionIndicatorView.transform = ShapeTransform(
-      translation: (
-        // figure out where the shape is in space
-        offset + shape.transform.translation +
-        // Account for the coordinate system being anchored in the middle
-        CGPoint(x: -bounds.size.width * selectionIndicatorAnchorPointOffset.x, y: -bounds.size.height * selectionIndicatorAnchorPointOffset.y) +
-        // We've just moved the CENTER of the selection view to the UPPER LEFT
-        // of the shape, so adjust by half the selection size:
-        CGPoint(x: selectionBounds.size.width / 2, y: selectionBounds.size.height / 2)),
-      rotation: shape.transform.rotation,
-      scale: shape.transform.scale).affineTransform
+        translation: translation,
+        rotation: shape.transform.rotation,
+        scale: shape.transform.scale).affineTransform
+      
     selectionIndicatorView.isHidden = false
 
     selectionIndicatorViewShapeLayer.frame = selectionIndicatorView.bounds
+      
     selectionIndicatorViewShapeLayer.path = UIBezierPath(rect: selectionIndicatorView.bounds).cgPath
   }
 
