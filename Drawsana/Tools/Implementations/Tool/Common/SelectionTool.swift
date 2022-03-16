@@ -164,17 +164,27 @@ extension SelectionTool {
     
     func updateShapeView() {
         guard let shape = selectedShape else { return }
-        guard let selectionIndicatorView = delegate?.selectionIndicatorView() else { return }
-        
-        editingView.bounds = selectionIndicatorView.bounds
-        editingView.transform = shape.transform.affineTransform
-        
+//        guard let selectionIndicatorView = delegate?.selectionIndicatorView() else { return }
+//
+//        editingView.bounds = selectionIndicatorView.bounds
+//        editingView.transform = shape.transform.affineTransform
+//
         var boundingRect = shape.selectionBoundingRect
         if shape is TextShape {
             boundingRect = shape.boundingRect
         }
+        
+        // TODO: 仮の修正
+        let selectionBounds = boundingRect.insetBy(
+          dx: -4,
+          dy: -4)
+        
+        editingView.bounds = selectionBounds
+        editingView.transform = shape.transform.affineTransform
+        
         editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shape.transform)
     }
+
     
     private func updateShapeEditingView(selectedShape: ShapeSelectable) {
         
