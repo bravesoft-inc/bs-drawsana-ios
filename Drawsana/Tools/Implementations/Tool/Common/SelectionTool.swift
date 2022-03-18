@@ -62,7 +62,6 @@ public class SelectionTool: NSObject, DrawingTool {
     
     public func apply(context: ToolOperationContext, userSettings: UserSettings) {
         if let shape = context.toolSettings.selectedShape {
-            shape.apply(userSettings: userSettings)
             context.toolSettings.isPersistentBufferDirty = true
         } else {
             context.toolSettings.interactiveView = nil
