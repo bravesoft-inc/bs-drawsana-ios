@@ -26,7 +26,7 @@ public struct PenLineSegment: Codable, Equatable {
 
 public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
   private enum CodingKeys: String, CodingKey {
-    case id, isFinished, strokeColor, start, strokeWidth, segments, isEraser, type, transform
+    case id, isFinished, strokeColor, start, strokeWidth, segments, isEraser, type, transform, selectionBoundingRect, boundingRectOrigin
   }
 
   public static let type: String = "Pen"
@@ -78,6 +78,8 @@ public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
     segments = try values.decode([PenLineSegment].self, forKey: .segments)
     isEraser = try values.decode(Bool.self, forKey: .isEraser)
     transform = try values.decodeIfPresent(ShapeTransform.self, forKey: .transform) ?? .identity
+      selectionBoundingRect = try values.decodeIfPresent(CGRect.self, forKey: .selectionBoundingRect) ?? .zero
+      boundingRectOrigin = try values.decodeIfPresent(CGPoint.self, forKey: .boundingRectOrigin) ?? .zero
   }
 
   public func encode(to encoder: Encoder) throws {
@@ -93,6 +95,8 @@ public class PenShape: Shape, ShapeWithStrokeState, ShapeSelectable {
     if !transform.isIdentity {
       try container.encode(transform, forKey: .transform)
     }
+      try container.encode(selectionBoundingRect, forKey: .selectionBoundingRect)
+      try container.encode(boundingRectOrigin, forKey: .boundingRectOrigin)
   }
 
   public func add(segment: PenLineSegment) {

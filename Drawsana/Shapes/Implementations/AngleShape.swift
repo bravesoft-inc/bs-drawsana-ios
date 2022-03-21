@@ -15,7 +15,7 @@ public class AngleShape:
 {
   private enum CodingKeys: String, CodingKey {
     case id, a, b, c, strokeColor, strokeWidth, capStyle, joinStyle,
-    dashPhase, dashLengths, transform, type
+    dashPhase, dashLengths, transform, type, selectionBoundingRect, boundingRectOrigin
   }
   
   public static let type: String = "Angle"
@@ -57,6 +57,10 @@ public class AngleShape:
     joinStyle = CGLineJoin(rawValue: try values.decodeIfPresent(Int32.self, forKey: .joinStyle) ?? CGLineJoin.round.rawValue)!
     dashPhase = try values.decodeIfPresent(CGFloat.self, forKey: .dashPhase)
     dashLengths = try values.decodeIfPresent([CGFloat].self, forKey: .dashLengths)
+      
+      selectionBoundingRect = try values.decodeIfPresent(CGRect.self, forKey: .selectionBoundingRect) ?? .zero
+      boundingRectOrigin = try values.decodeIfPresent(CGPoint.self, forKey: .boundingRectOrigin) ?? .zero
+      
   }
   
   public func encode(to encoder: Encoder) throws {
@@ -81,6 +85,8 @@ public class AngleShape:
     }
     try container.encodeIfPresent(dashPhase, forKey: .dashPhase)
     try container.encodeIfPresent(dashLengths, forKey: .dashLengths)
+      try container.encode(selectionBoundingRect, forKey: .selectionBoundingRect)
+      try container.encode(boundingRectOrigin, forKey: .boundingRectOrigin)
   }
   
   public func render(in context: CGContext) {

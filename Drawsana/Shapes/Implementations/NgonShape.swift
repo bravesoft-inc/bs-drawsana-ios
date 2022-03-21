@@ -15,7 +15,7 @@ public class NgonShape:
 {
     private enum CodingKeys: String, CodingKey {
         case id, a, b, strokeColor, fillColor, strokeWidth, capStyle, joinStyle,
-        dashPhase, dashLengths, transform, type, sides
+        dashPhase, dashLengths, transform, type, sides, selectionBoundingRect, boundingRectOrigin
     }
     
     public static let type: String = "Ngon"
@@ -66,6 +66,8 @@ public class NgonShape:
         joinStyle = CGLineJoin(rawValue: try values.decodeIfPresent(Int32.self, forKey: .joinStyle) ?? CGLineJoin.round.rawValue)!
         dashPhase = try values.decodeIfPresent(CGFloat.self, forKey: .dashPhase)
         dashLengths = try values.decodeIfPresent([CGFloat].self, forKey: .dashLengths)
+        selectionBoundingRect = try values.decodeIfPresent(CGRect.self, forKey: .selectionBoundingRect) ?? .zero
+        boundingRectOrigin = try values.decodeIfPresent(CGPoint.self, forKey: .boundingRectOrigin) ?? .zero
     }
     
     public func encode(to encoder: Encoder) throws {
@@ -91,6 +93,8 @@ public class NgonShape:
         }
         try container.encodeIfPresent(dashPhase, forKey: .dashPhase)
         try container.encodeIfPresent(dashLengths, forKey: .dashLengths)
+        try container.encode(selectionBoundingRect, forKey: .selectionBoundingRect)
+        try container.encode(boundingRectOrigin, forKey: .boundingRectOrigin)
     }
     
     public func render(in context: CGContext) {
