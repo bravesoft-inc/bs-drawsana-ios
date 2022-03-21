@@ -155,7 +155,7 @@ public class TextTool: NSObject, DrawingTool {
 
   public func apply(context: ToolOperationContext, userSettings: UserSettings) {
 //    selectedShape?.apply(userSettings: userSettings)
-    updateTextView()
+//    updateTextView()
     if context.toolSettings.selectedShape == nil {
       selectedShape = nil
       context.toolSettings.interactiveView = nil
