@@ -470,6 +470,9 @@ extension DrawsanaView: ToolSettingsDelegate {
   {
     applySelectionViewState()
     // DrawingView's delegate might set this, so notify the tool if it happens
+      
+      guard let _ = selectedShape else { return }
+
     tool?.apply(context: toolOperationContext, userSettings: userSettings)
   }
 
