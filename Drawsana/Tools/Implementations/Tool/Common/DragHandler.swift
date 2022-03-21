@@ -69,9 +69,9 @@ class MoveHandler: DragHandler {
     }
     
     override func handleDragCancel(context: ToolOperationContext, point: CGPoint) {
-        shape.transform = originalTransform
-        context.toolSettings.isPersistentBufferDirty = true
-        selectionTool?.updateShapeFrame()
+//        shape.transform = originalTransform
+//        context.toolSettings.isPersistentBufferDirty = true
+//        selectionTool?.updateShapeFrame()
     }
 }
 
@@ -175,9 +175,9 @@ class ResizeAndRotateHandler: DragHandler {
     }
     
     override func handleDragCancel(context: ToolOperationContext, point: CGPoint) {
-        shape.transform = originalTransform
-        context.toolSettings.isPersistentBufferDirty = true
-        selectionTool?.updateShapeFrame()
+//        shape.transform = originalTransform
+//        context.toolSettings.isPersistentBufferDirty = true
+//        selectionTool?.updateShapeFrame()
     }
     
     private func makeDeltaAngle(targetPoint: CGPoint, center: CGPoint) -> CGFloat {
