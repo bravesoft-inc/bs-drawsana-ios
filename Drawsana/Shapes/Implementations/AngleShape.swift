@@ -65,7 +65,7 @@ public class AngleShape:
   
   public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
-    try container.encode(LineShape.type, forKey: .type)
+    try container.encode(AngleShape.type, forKey: .type)
     try container.encode(id, forKey: .id)
     try container.encode(a, forKey: .a)
     try container.encode(b, forKey: .b)
