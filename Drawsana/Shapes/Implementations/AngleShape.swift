@@ -41,7 +41,7 @@ public class AngleShape:
     let values = try decoder.container(keyedBy: CodingKeys.self)
     
     let type = try values.decode(String.self, forKey: .type)
-    if type != LineShape.type {
+    if type != AngleShape.type {
       throw DrawsanaDecodingError.wrongShapeTypeError
     }
     
