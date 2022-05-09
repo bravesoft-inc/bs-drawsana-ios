@@ -157,6 +157,7 @@ class ViewController: UIViewController {
         
         drawingView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(drawingView)
+        drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
         
         let imageAspectRatio = imageView.image!.size.width / imageView.image!.size.height
         

@@ -290,20 +290,23 @@ public class TextTool: NSObject, DrawingTool {
     return CGRect(origin: finalOrigin, size: finalSize)
   }
 
-    private func makeTextView() -> TextShapeEditingView {
-        let textView = UITextView()
-        textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
-        textView.textContainerInset = .zero
-        textView.contentInset = .zero
-        textView.isScrollEnabled = false
-        textView.clipsToBounds = true
-        textView.autocorrectionType = .no
-        textView.backgroundColor = .clear
-        textView.delegate = self
-        let editingView = TextShapeEditingView(textView: textView)
-        editingView.addStandardControls()
-        return editingView
-    }
+  private func makeTextView() -> TextShapeEditingView {
+    let textView = UITextView()
+    textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
+    textView.textContainerInset = .zero
+    textView.contentInset = .zero
+    textView.isScrollEnabled = false
+    textView.clipsToBounds = true
+    textView.autocorrectionType = .no
+    textView.backgroundColor = .clear
+    
+    /// 反転
+    textView.transform = CGAffineTransform(scaleX: -1, y: 1)
+    textView.delegate = self
+    let editingView = TextShapeEditingView(textView: textView)
+    editingView.addStandardControls()
+    return editingView
+  }
 }
 
 extension TextTool: UITextViewDelegate {
