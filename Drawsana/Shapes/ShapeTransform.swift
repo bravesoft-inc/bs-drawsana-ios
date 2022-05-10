@@ -31,6 +31,8 @@ extension ShapeTransform {
     return CGAffineTransform(translationX: translation.x, y: translation.y)
       .rotated(by: rotation)
       .scaledBy(x: scale, y: scale)
+      /// custom
+      .scaledBy(x: -1, y: 1)
   }
 
   /// Apply this transform in Core Graphics

@@ -87,11 +87,6 @@ public class TextShape: Shape, ShapeSelectable {
                 .font: self.font,
                 .foregroundColor: self.fillColor,
             ])
-        
-        /// 追加
-        context.translateBy(x: self.boundingRect.size.width, y: self.boundingRect.size.height)
-        context.scaleBy(x: -1, y: -1)
-        
         transform.end(context: context)
     }
 

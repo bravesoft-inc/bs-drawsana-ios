@@ -299,9 +299,6 @@ public class TextTool: NSObject, DrawingTool {
     textView.clipsToBounds = true
     textView.autocorrectionType = .no
     textView.backgroundColor = .clear
-    
-    /// 反転
-    textView.transform = CGAffineTransform(scaleX: -1, y: 1)
     textView.delegate = self
     let editingView = TextShapeEditingView(textView: textView)
     editingView.addStandardControls()
