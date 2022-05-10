@@ -302,9 +302,7 @@ class ViewController: UIViewController {
         }
         
         /// isInvertedの値を確認してTextShape.transform.isInvertedの値を更新する
-        let textShapes = drawingView.drawing.shapes.compactMap { shape in
-            shape as? TextShape
-        }
+        let textShapes = drawingView.drawing.shapes.compactMap({ $0 as? TextShape })
         
         textShapes.forEach { textShape in
             textShape.transform.isInverted = isInverted
