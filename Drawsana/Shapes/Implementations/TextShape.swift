@@ -78,17 +78,17 @@ public class TextShape: Shape, ShapeSelectable {
     try container.encode(boundingRect, forKey: .boundingRect)
   }
 
-    public func render(in context: CGContext) {
-        if isBeingEdited { return }
-        transform.begin(context: context)
-        (self.text as NSString).draw(
-            in: CGRect(origin: boundingRect.origin, size: self.boundingRect.size),
-            withAttributes: [
-                .font: self.font,
-                .foregroundColor: self.fillColor,
-            ])
-        transform.end(context: context)
-    }
+  public func render(in context: CGContext) {
+    if isBeingEdited { return }
+    transform.begin(context: context)
+    (self.text as NSString).draw(
+      in: CGRect(origin: boundingRect.origin, size: self.boundingRect.size),
+      withAttributes: [
+        .font: self.font,
+        .foregroundColor: self.fillColor,
+      ])
+    transform.end(context: context)
+  }
 
   public func apply(userSettings: UserSettings) {
     fillColor = userSettings.strokeColor ?? .black
