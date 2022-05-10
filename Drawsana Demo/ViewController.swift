@@ -300,6 +300,20 @@ class ViewController: UIViewController {
         } else {
             drawingView.transform = CGAffineTransform(scaleX: 1, y: 1)
         }
+        
+        /// isInvertedの値を確認してTextShape.transform.isInvertedの値を更新する
+        let textShapes = drawingView.drawing.shapes.compactMap { shape in
+            shape as? TextShape
+        }
+        
+        textShapes.forEach { textShape in
+            textShape.transform.isInverted = isInverted
+        }
+
+        print("[debug] ViewController: \(isInverted)")
+        textShapes.forEach { textShape in
+            print("[debug] textShape: \(textShape.transform.isInverted)")
+        }
     }
     
     @objc private func reload(_ sender: Any?) {

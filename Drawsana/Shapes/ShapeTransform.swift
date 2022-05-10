@@ -32,9 +32,7 @@ extension ShapeTransform {
     if isInverted {
       return CGAffineTransform(translationX: translation.x, y: translation.y)
         .rotated(by: rotation)
-        .scaledBy(x: scale, y: scale)
-      /// custom
-        .scaledBy(x: -1, y: 1)
+        .scaledBy(x: scale * -1, y: scale)
     } else {
       return CGAffineTransform(translationX: translation.x, y: translation.y)
         .rotated(by: rotation)
