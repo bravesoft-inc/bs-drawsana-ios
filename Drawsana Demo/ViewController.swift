@@ -298,8 +298,19 @@ class ViewController: UIViewController {
         
         if isInverted {
             drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
+            invertTextShapes()
         } else {
             drawingView.transform = CGAffineTransform(scaleX: 1, y: 1)
+            invertTextShapes()
+        }
+        
+        drawingView.rerenderAllShapesInefficiently()
+    }
+    
+    private func invertTextShapes() {
+        let textShapes = drawingView.drawing.shapes.compactMap({ $0 as? TextShape })
+        textShapes.forEach { textShape in
+            textShape.transform.isInverted = isInverted
         }
     }
     
