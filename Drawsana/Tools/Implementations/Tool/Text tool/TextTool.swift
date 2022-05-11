@@ -45,8 +45,8 @@ public class TextTool: NSObject, DrawingTool {
   private weak var shapeUpdater: DrawsanaViewShapeUpdating?
   // internal for use by DragTextHandler subclasses
   internal lazy var editingView: TextShapeEditingView = makeTextView()
-  
-  /// custom
+
+  /// Viewが反転されているかを管理するフラグ
   public var isInverted = false
 
   public init(delegate: TextToolDelegate? = nil) {
