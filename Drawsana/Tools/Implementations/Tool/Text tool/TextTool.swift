@@ -45,6 +45,9 @@ public class TextTool: NSObject, DrawingTool {
   private weak var shapeUpdater: DrawsanaViewShapeUpdating?
   // internal for use by DragTextHandler subclasses
   internal lazy var editingView: TextShapeEditingView = makeTextView()
+  
+  /// custom
+  public var isInverted = false
 
   public init(delegate: TextToolDelegate? = nil) {
     super.init()
@@ -97,6 +100,7 @@ public class TextTool: NSObject, DrawingTool {
       context.toolSettings.isPersistentBufferDirty = true
     } else {
       let newShape = TextShape()
+      newShape.transform.isInverted = isInverted
       newShape.apply(userSettings: context.userSettings)
       self.selectedShape = newShape
       newShape.transform.translation = delegate?.textToolPointForNewText(tappedPoint: point) ?? point
