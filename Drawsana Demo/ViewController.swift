@@ -47,6 +47,7 @@ class ViewController: UIViewController {
         barButtonSystemItem: .trash,
         target: self,
         action: #selector(ViewController.removeSelection(_:)))
+    let invertButton = UIButton()
     let toolButton = UIButton(type: .custom)
     let imageView = UIImageView(image: UIImage(named: "demo"))
     let undoButton = UIButton()
@@ -60,6 +61,7 @@ class ViewController: UIViewController {
         return UIStackView(arrangedSubviews: [
             undoButton,
             redoButton,
+            invertButton,
             strokeColorButton,
             fillColorButton,
             strokeWidthButton,
@@ -99,6 +101,7 @@ class ViewController: UIViewController {
         20,
     ]
     var strokeWidthIndex = 0
+    var isReversed = false
     
     // Just AutoLayout code here
     override func loadView() {
@@ -138,6 +141,16 @@ class ViewController: UIViewController {
         reloadButton.layer.borderWidth = 0.5
         reloadButton.setTitle("🔁", for: .normal)
         
+        invertButton.translatesAutoresizingMaskIntoConstraints = false
+        invertButton.addTarget(
+            self, action: #selector(ViewController.invertDrawingView(_:)), for: .touchUpInside
+        )
+        invertButton.layer.borderColor = UIColor.white.cgColor
+        invertButton.layer.borderWidth = 0.5
+        if #available(iOS 13.0, *) {
+            invertButton.setImage(UIImage(systemName: "arrowtriangle.left.fill.and.line.vertical.and.arrowtriangle.right.fill"), for: .normal)
+        }
+        
         resetButton.translatesAutoresizingMaskIntoConstraints = false
         resetButton.addTarget(self, action: #selector(ViewController.resetDrawing(_:)), for: .touchUpInside)
         resetButton.setTitle("reset", for: .normal)
@@ -157,7 +170,7 @@ class ViewController: UIViewController {
         
         drawingView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(drawingView)
-        
+
         let imageAspectRatio = imageView.image!.size.width / imageView.image!.size.height
         
         NSLayoutConstraint.activate([
@@ -276,6 +289,28 @@ class ViewController: UIViewController {
     @objc private func removeSelection(_ sender: Any?) {
         if let selectedShape = drawingView.toolSettings.selectedShape {
             drawingView.operationStack.apply(operation: RemoveShapeOperation(shape: selectedShape))
+        }
+    }
+    
+    @objc private func invertDrawingView(_ sender: Any?) {
+        isReversed.toggle()
+        textTool.isReversed = isReversed
+        
+        if isReversed {
+            drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
+            imageView.transform = CGAffineTransform(scaleX: -1, y: 1)
+        } else {
+            drawingView.transform = CGAffineTransform(scaleX: 1, y: 1)
+            imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+        
+        drawingView.updateIsReversedTextShapes(isReversed: isReversed)
+    }
+    
+    private func invertTextShapes() {
+        let textShapes = drawingView.drawing.shapes.compactMap({ $0 as? TextShape })
+        textShapes.forEach { textShape in
+            textShape.transform.isReversed = isReversed
         }
     }
     

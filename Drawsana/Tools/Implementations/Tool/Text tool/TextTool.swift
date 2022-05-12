@@ -46,6 +46,9 @@ public class TextTool: NSObject, DrawingTool {
   // internal for use by DragTextHandler subclasses
   internal lazy var editingView: TextShapeEditingView = makeTextView()
 
+  /// Viewが反転されているかを管理するフラグ
+  public var isReversed = false
+
   public init(delegate: TextToolDelegate? = nil) {
     super.init()
     self.delegate = delegate
@@ -97,6 +100,7 @@ public class TextTool: NSObject, DrawingTool {
       context.toolSettings.isPersistentBufferDirty = true
     } else {
       let newShape = TextShape()
+      newShape.transform.isReversed = isReversed
       newShape.apply(userSettings: context.userSettings)
       self.selectedShape = newShape
       newShape.transform.translation = delegate?.textToolPointForNewText(tappedPoint: point) ?? point
@@ -290,20 +294,20 @@ public class TextTool: NSObject, DrawingTool {
     return CGRect(origin: finalOrigin, size: finalSize)
   }
 
-    private func makeTextView() -> TextShapeEditingView {
-        let textView = UITextView()
-        textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
-        textView.textContainerInset = .zero
-        textView.contentInset = .zero
-        textView.isScrollEnabled = false
-        textView.clipsToBounds = true
-        textView.autocorrectionType = .no
-        textView.backgroundColor = .clear
-        textView.delegate = self
-        let editingView = TextShapeEditingView(textView: textView)
-        editingView.addStandardControls()
-        return editingView
-    }
+  private func makeTextView() -> TextShapeEditingView {
+    let textView = UITextView()
+    textView.autoresizingMask = [.flexibleRightMargin, .flexibleBottomMargin]
+    textView.textContainerInset = .zero
+    textView.contentInset = .zero
+    textView.isScrollEnabled = false
+    textView.clipsToBounds = true
+    textView.autocorrectionType = .no
+    textView.backgroundColor = .clear
+    textView.delegate = self
+    let editingView = TextShapeEditingView(textView: textView)
+    editingView.addStandardControls()
+    return editingView
+  }
 }
 
 extension TextTool: UITextViewDelegate {
