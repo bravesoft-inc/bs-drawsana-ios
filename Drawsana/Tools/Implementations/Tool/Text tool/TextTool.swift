@@ -47,7 +47,7 @@ public class TextTool: NSObject, DrawingTool {
   internal lazy var editingView: TextShapeEditingView = makeTextView()
 
   /// Viewが反転されているかを管理するフラグ
-  public var isInverted = false
+  public var isReversed = false
 
   public init(delegate: TextToolDelegate? = nil) {
     super.init()
@@ -100,7 +100,7 @@ public class TextTool: NSObject, DrawingTool {
       context.toolSettings.isPersistentBufferDirty = true
     } else {
       let newShape = TextShape()
-      newShape.transform.isInverted = isInverted
+      newShape.transform.isReversed = isReversed
       newShape.apply(userSettings: context.userSettings)
       self.selectedShape = newShape
       newShape.transform.translation = delegate?.textToolPointForNewText(tappedPoint: point) ?? point

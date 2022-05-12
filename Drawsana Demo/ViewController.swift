@@ -101,7 +101,7 @@ class ViewController: UIViewController {
         20,
     ]
     var strokeWidthIndex = 0
-    var isInverted = false
+    var isReversed = false
     
     // Just AutoLayout code here
     override func loadView() {
@@ -293,14 +293,16 @@ class ViewController: UIViewController {
     }
     
     @objc private func invertDrawingView(_ sender: Any?) {
-        isInverted.toggle()
-        textTool.isInverted = isInverted
+        isReversed.toggle()
+        textTool.isReversed = isReversed
         
-        if isInverted {
+        if isReversed {
             drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
+            imageView.transform = CGAffineTransform(scaleX: -1, y: 1)
             invertTextShapes()
         } else {
             drawingView.transform = CGAffineTransform(scaleX: 1, y: 1)
+            imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
             invertTextShapes()
         }
         
@@ -310,7 +312,7 @@ class ViewController: UIViewController {
     private func invertTextShapes() {
         let textShapes = drawingView.drawing.shapes.compactMap({ $0 as? TextShape })
         textShapes.forEach { textShape in
-            textShape.transform.isInverted = isInverted
+            textShape.transform.isReversed = isReversed
         }
     }
     

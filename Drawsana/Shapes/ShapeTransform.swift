@@ -16,7 +16,7 @@ public struct ShapeTransform: Codable, Equatable {
   public var translation: CGPoint
   public var rotation: CGFloat
   public var scale: CGFloat
-  public var isInverted = false
+  public var isReversed = false
 
   public static let identity = ShapeTransform(translation: .zero, rotation: 0, scale: 1)
 }
@@ -29,7 +29,7 @@ extension ShapeTransform {
 
   /// Representation of this transform as a `CGAffineTransform`
   public var affineTransform: CGAffineTransform {
-    if isInverted {
+    if isReversed {
       return CGAffineTransform(translationX: translation.x, y: translation.y)
         .rotated(by: rotation)
         .scaledBy(x: scale * -1, y: scale)
