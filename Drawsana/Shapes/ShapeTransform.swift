@@ -29,15 +29,11 @@ extension ShapeTransform {
 
   /// Representation of this transform as a `CGAffineTransform`
   public var affineTransform: CGAffineTransform {
-    if isReversed {
-      return CGAffineTransform(translationX: translation.x, y: translation.y)
-        .rotated(by: rotation)
-        .scaledBy(x: scale * -1, y: scale)
-    } else {
-      return CGAffineTransform(translationX: translation.x, y: translation.y)
-        .rotated(by: rotation)
-        .scaledBy(x: scale, y: scale)
-    }
+    let scaleX = isReversed ? -scale : scale
+    
+    return CGAffineTransform(translationX: translation.x, y: translation.y)
+      .rotated(by: rotation)
+      .scaledBy(x: scaleX, y: scale)
   }
 
   /// Apply this transform in Core Graphics
