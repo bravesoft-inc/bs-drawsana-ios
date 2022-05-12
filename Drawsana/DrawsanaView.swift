@@ -538,3 +538,16 @@ extension DrawsanaView: UserSettingsDelegate {
 public protocol DrawsanaViewShapeUpdating: AnyObject {
   func rerenderAllShapesInefficiently()
 }
+
+/**
+ テキストを反転させないための対応
+ */
+extension DrawsanaView {
+    public func updateIsReversedShapes(isReversed: Bool) {
+        let textShapes = drawing.shapes.compactMap({ $0 as? TextShape })
+        textShapes.forEach { textShape in
+            textShape.transform.isReversed = isReversed
+        }
+        rerenderAllShapesInefficiently()
+    }
+}

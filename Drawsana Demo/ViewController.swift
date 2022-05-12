@@ -299,14 +299,12 @@ class ViewController: UIViewController {
         if isReversed {
             drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
             imageView.transform = CGAffineTransform(scaleX: -1, y: 1)
-            invertTextShapes()
         } else {
             drawingView.transform = CGAffineTransform(scaleX: 1, y: 1)
             imageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-            invertTextShapes()
         }
         
-        drawingView.rerenderAllShapesInefficiently()
+        drawingView.updateIsReversedShapes(isReversed: isReversed)
     }
     
     private func invertTextShapes() {
