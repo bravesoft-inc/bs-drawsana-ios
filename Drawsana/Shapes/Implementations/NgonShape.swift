@@ -100,7 +100,7 @@ public class NgonShape:
     
     public func render(in context: CGContext) {
         shapeRender(in: context)
-//        pointRender(in: context)
+        pointRender(in: context)
     }
     private func shapeRender(in context: CGContext) {
         transform.begin(context: context)
@@ -139,15 +139,16 @@ public class NgonShape:
             transform.begin(context: context)
             context.setLineCap(capStyle)
             context.setLineJoin(joinStyle)
-            context.setLineWidth(strokeWidth)
             
-            context.setStrokeColor(UIColor.rgba(red: 255, green: 0, blue: 59, alpha: 1.0).cgColor)
+            context.setFillColor(UIColor.rgba(red: 255, green: 0, blue: 59, alpha: 1.0).cgColor)
             context.setLineDash(phase: 0, lengths: [])
             
-            let originDiff = strokeWidth / 2
+            let pointWidth: CGFloat = strokeWidth * 2
+            let identityStrokeWidth = pointWidth / transform.scale
+            let originDiff = identityStrokeWidth / 2
             
-            context.addEllipse(in: CGRect(origin: .init(x: point.x - originDiff, y: point.y - originDiff), size: .init(width: strokeWidth, height: strokeWidth)))
-            context.strokePath()
+            context.addEllipse(in: CGRect(origin: .init(x: point.x - originDiff, y: point.y - originDiff), size: .init(width: identityStrokeWidth, height: identityStrokeWidth)))
+            context.fillPath()
             
             transform.end(context: context)
         }

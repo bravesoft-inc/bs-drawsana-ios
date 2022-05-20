@@ -173,6 +173,11 @@ extension SelectionTool {
             boundingRect = shape.boundingRect
         }
         
+        if let ngonShape = shape as? NgonShape, let points = ngonShape.points {
+            editingView.shapeSides = points
+        }
+        editingView.addShapeChangeControls()
+        
         editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shape.transform)
     }
 
