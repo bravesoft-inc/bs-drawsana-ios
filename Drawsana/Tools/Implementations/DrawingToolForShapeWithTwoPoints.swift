@@ -81,10 +81,17 @@ open class DrawingToolForShapeWithTwoPoints: DrawingTool {
           selectableShape.boundingRectOrigin = resetRectOrigin
           selectableShape.selectionBoundingRect = CGRect(origin: .zero, size: boundingRect.size)
           context.operationStack.apply(operation: AddShapeOperation(shape: selectableShape))
+          
+          print("----------------------------------------------------------------")
+          print("shape.boundingRect.middle:\(selectableShape.boundingRect.middle)")
+          print("selectableShape.boundingRect:\(selectableShape.boundingRect)")
+          print("selectableShape.boundingRectOrigin:\(selectableShape.boundingRectOrigin)")
+          print("selectableShape.selectionBoundingRect:\(selectableShape.selectionBoundingRect)")
       }
       
       if let ngonShape = shape as? NgonShape {
           ngonShape.createPoints()
+          
       }
       
       shapeInProgress = nil

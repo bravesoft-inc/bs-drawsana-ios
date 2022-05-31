@@ -20,6 +20,13 @@ extension CGPoint {
     static func distance(a:CGPoint, b:CGPoint) -> CGFloat {
         return sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))
     }
+    
+    func rotate(around center: CGPoint, angle: CGFloat) -> CGPoint {
+        let translate = CGAffineTransform(translationX: -center.x, y: -center.y)
+        let transform = translate.concatenating(CGAffineTransform(rotationAngle: angle))
+        let rotated = applying(transform)
+        return rotated.applying(CGAffineTransform(translationX: center.x, y: center.y))
+    }
 }
 
 func +(_ a: CGPoint, _ b: CGPoint) -> CGPoint {

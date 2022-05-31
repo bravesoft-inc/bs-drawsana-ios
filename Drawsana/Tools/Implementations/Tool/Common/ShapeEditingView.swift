@@ -85,7 +85,7 @@ public class ShapeEditingView: UIView {
             imageView.translatesAutoresizingMaskIntoConstraints = true
             imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             imageView.contentMode = .scaleAspectFit
-            imageView.backgroundColor = .white
+            imageView.backgroundColor = .clear
             view.addSubview(imageView)
         }
         return view
@@ -110,7 +110,7 @@ public class ShapeEditingView: UIView {
         }
         shapeChangeViews = []
         for (tag, _) in shapeSides.enumerated() {
-            let shapeChangeView = makeView(SelectionToolSettings.shared.deleteButtonImage)
+            let shapeChangeView = makeView(SelectionToolSettings.shared.changeButtonImage)
             shapeChangeView.tag = shapeChangeViewTag + tag
 //            shapeChangeView.alpha = 0.3
             addControl(dragActionType: .changeShape, view: shapeChangeView) { (view, shapeChangeView) in
@@ -129,20 +129,25 @@ public class ShapeEditingView: UIView {
     public func selectionToolDidUpdateEditingView(boundingRect: CGRect, shape: ShapeSelectable, transform: ShapeTransform) {
         let updateHalfButtonSize = halfButtonSize / transform.scale
         let updateButtonSize = buttonSize / transform.scale
-        let updateButtonImageInset = 4 / transform.scale
+        var updateButtonImageInset = 4 / transform.scale
         let resetBoundingRectWidth = (boundingRect.width + 8)
         let resetBoundingRectHeight = (boundingRect.height + 8)
         
         for control in controls {
             switch control.dragActionType {
             case .resizeAndRotate:
-                control.view.frame = CGRect(origin: .init(x: -updateHalfButtonSize, y: -updateHalfButtonSize), size: .init(width: updateButtonSize, height: updateButtonSize))
+                let x = -updateHalfButtonSize + (boundingRect.origin.x / transform.scale)
+                let y = -updateHalfButtonSize + (boundingRect.origin.y / transform.scale)
+                control.view.frame = CGRect(origin: .init(x: x, y: y), size: .init(width: updateButtonSize, height: updateButtonSize))
                 control.view.subviews.first?.frame = control.view.bounds.insetBy(dx: updateButtonImageInset, dy: updateButtonImageInset)
                 control.view.isHidden = shape is GuideLineShape
             case .delete:
-                control.view.frame = CGRect(origin: .init(x: resetBoundingRectWidth - updateHalfButtonSize, y: -updateHalfButtonSize), size: .init(width: updateButtonSize, height: updateButtonSize))
+                let x = (resetBoundingRectWidth - updateHalfButtonSize) + (boundingRect.origin.x / transform.scale)
+                let y = -updateHalfButtonSize + (boundingRect.origin.y / transform.scale)
+                control.view.frame = CGRect(origin: .init(x: x, y: y), size: .init(width: updateButtonSize, height: updateButtonSize))
                 control.view.subviews.first?.frame = control.view.bounds.insetBy(dx: updateButtonImageInset, dy: updateButtonImageInset)
             case .changeShape:
+                guard !shapeSides.isEmpty else { continue }
                 let tag = control.view.tag - shapeChangeViewTag
                 let shapeSide = shapeSides[tag]
                 
@@ -151,9 +156,12 @@ public class ShapeEditingView: UIView {
                 var updateButtonY = shapeSide.y + (resetBoundingRectHeight / 2)
                 updateButtonY -= updateHalfButtonSize
                 
+                updateButtonImageInset = 10 / transform.scale
+                
                 control.view.frame = CGRect(origin: .init(x: updateButtonX, y: updateButtonY),
                                             size: .init(width: updateButtonSize, height: updateButtonSize))
                 control.view.subviews.first?.frame = control.view.bounds.insetBy(dx: updateButtonImageInset, dy: updateButtonImageInset)
+                
             default:
                 break
             }

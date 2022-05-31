@@ -37,6 +37,25 @@ public class NgonShape:
     public var points: [CGPoint]?
     
     public var boundingRect: CGRect {
+        if let points = points {
+            var x1 = points.first?.x ?? 0
+            var y1 = points.first?.y ?? 0
+            var x2 = points.first?.x ?? 0
+            var y2 = points.first?.y ?? 0
+            
+            for idx in 1..<points.count {
+                let point = points[idx]
+                x1 = min(x1, point.x)
+                y1 = min(y1, point.y)
+                x2 = max(x2, point.x)
+                y2 = max(y2, point.y)
+            }
+            
+            let width = x2 - x1
+            let height = y2 - y1
+            
+            return CGRect(x: x1, y: y1, width: width, height: height)
+        }
         return squareRect
     }
     
@@ -100,7 +119,7 @@ public class NgonShape:
     
     public func render(in context: CGContext) {
         shapeRender(in: context)
-        pointRender(in: context)
+//        pointRender(in: context)
     }
     private func shapeRender(in context: CGContext) {
         transform.begin(context: context)
@@ -146,7 +165,7 @@ public class NgonShape:
             let pointWidth: CGFloat = strokeWidth * 2
             let identityStrokeWidth = pointWidth / transform.scale
             let originDiff = identityStrokeWidth / 2
-            
+
             context.addEllipse(in: CGRect(origin: .init(x: point.x - originDiff, y: point.y - originDiff), size: .init(width: identityStrokeWidth, height: identityStrokeWidth)))
             context.fillPath()
             
@@ -184,6 +203,7 @@ extension NgonShape {
         return points
     }
     func createPoints() {
+        guard sides == 3 else { return }
         points = polygonPoints()
     }
     

@@ -169,7 +169,6 @@ extension ShapeWithTwoPoints {
         let y = b.y < a.y ? a.y - width : a.y
         return CGRect(x: x, y: y, width: width, height: width)
     }
-    
 
   public var boundingRect: CGRect {
     return rect.insetBy(dx: -strokeWidth/2, dy: -strokeWidth/2)
