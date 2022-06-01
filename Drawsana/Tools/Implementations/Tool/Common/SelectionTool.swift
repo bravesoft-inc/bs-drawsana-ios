@@ -97,6 +97,8 @@ public class SelectionTool: NSObject, DrawingTool {
             dragHandler = ResizeAndRotateHandler(shape: selectedShape, selectionTool: self)
         } else if let dragActionType = editingView.getDragActionType(point: point), case .delete = dragActionType {
             applyRemoveShapeOperation(context: context)
+        } else if let dragActionType = editingView.getDragActionType(point: point), case .changeShape = dragActionType, !(selectedShape is GuideLineShape) {
+            dragHandler = ChangeShapeHandler(shape: selectedShape, selectionTool: self)
         } else {
             guard selectedShape.hitTest(point: point) else {
                 context.toolSettings.selectedShape = nil
@@ -173,6 +175,14 @@ extension SelectionTool {
             boundingRect = shape.boundingRect
         }
         
+        if let ngonShape = shape as? NgonShape, let points = ngonShape.points {
+            editingView.shapeSides = points
+        } else {
+            editingView.shapeSides = []
+        }
+        
+        editingView.addShapeChangeControls()
+        
         editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shape.transform)
     }
 
@@ -194,5 +204,16 @@ extension SelectionTool {
         let editingView = ShapeEditingView(shapeView: view)
         editingView.addStandardControls()
         return editingView
+    }
+}
+
+extension SelectionTool {
+    
+    public func renderShapeInProgress(transientContext: CGContext) {
+        if dragHandler is ChangeShapeHandler {
+            //shapeのpointが直接変わるため
+            shapeUpdater?.rerenderAllShapesInefficiently()
+//            selectedShape?.render(in: transientContext)
+        }
     }
 }

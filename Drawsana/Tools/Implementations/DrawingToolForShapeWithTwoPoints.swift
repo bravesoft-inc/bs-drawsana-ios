@@ -46,25 +46,25 @@ open class DrawingToolForShapeWithTwoPoints: DrawingTool {
     guard var shape = shapeInProgress else { return }
     shape.b = point
       
-      if let ngonShape = shape as? NgonShape, ngonShape.sides == 3 {
-          //三角だけ正方形に修正
-          let diffrence = abs(shape.rect.width - shape.rect.height)
-          if shape.rect.width > shape.rect.height {
-              if shape.a.x > shape.b.x {
-                  shape.b.x += diffrence
+      if let ngonShape = shape as? NgonShape {
+          if ngonShape.sides == 3 {
+              //三角だけ正方形に修正
+              let diffrence = abs(shape.rect.width - shape.rect.height)
+              if shape.rect.width > shape.rect.height {
+                  if shape.a.x > shape.b.x {
+                      shape.b.x += diffrence
+                  } else {
+                      shape.b.x -= diffrence
+                  }
               } else {
-                  shape.b.x -= diffrence
-              }
-          } else {
-              if shape.a.y > shape.b.y {
-                  shape.b.y += diffrence
-              } else {
-                  shape.b.y -= diffrence
+                  if shape.a.y > shape.b.y {
+                      shape.b.y += diffrence
+                  } else {
+                      shape.b.y -= diffrence
+                  }
               }
           }
       }
-      
-      
       
       let translation = shape.rect.origin
       let boundingRect = shape.boundingRect
@@ -81,9 +81,20 @@ open class DrawingToolForShapeWithTwoPoints: DrawingTool {
           selectableShape.boundingRectOrigin = resetRectOrigin
           selectableShape.selectionBoundingRect = CGRect(origin: .zero, size: boundingRect.size)
           context.operationStack.apply(operation: AddShapeOperation(shape: selectableShape))
+          
+          print("----------------------------------------------------------------")
+          print("shape.boundingRect.middle:\(selectableShape.boundingRect.middle)")
+          print("selectableShape.boundingRect:\(selectableShape.boundingRect)")
+          print("selectableShape.boundingRectOrigin:\(selectableShape.boundingRectOrigin)")
+          print("selectableShape.selectionBoundingRect:\(selectableShape.selectionBoundingRect)")
       }
       
-    shapeInProgress = nil
+      if let ngonShape = shape as? NgonShape {
+          ngonShape.createPoints()
+          
+      }
+      
+      shapeInProgress = nil
   }
 
   public func handleDragCancel(context: ToolOperationContext, point: CGPoint) {

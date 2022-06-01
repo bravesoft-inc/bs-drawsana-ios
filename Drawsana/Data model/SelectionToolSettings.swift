@@ -14,4 +14,5 @@ public class SelectionToolSettings {
     
     public var rotateButtonImage: UIImage?
     public var deleteButtonImage: UIImage?
+    public var changeButtonImage: UIImage?
 }

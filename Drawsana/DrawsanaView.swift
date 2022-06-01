@@ -211,6 +211,7 @@ public class DrawsanaView: UIView {
     
     SelectionToolSettings.shared.rotateButtonImage = UIImage(named: "text_handle_icon")
     SelectionToolSettings.shared.deleteButtonImage = UIImage(named: "icon_delete")
+    SelectionToolSettings.shared.changeButtonImage = UIImage(named: "icon_point")
   }
 
   public override func layoutSubviews() {
