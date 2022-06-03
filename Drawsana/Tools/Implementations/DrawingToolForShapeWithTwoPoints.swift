@@ -88,10 +88,10 @@ open class DrawingToolForShapeWithTwoPoints: DrawingTool {
           print("selectableShape.boundingRectOrigin:\(selectableShape.boundingRectOrigin)")
           print("selectableShape.selectionBoundingRect:\(selectableShape.selectionBoundingRect)")
       }
-      
-      if let ngonShape = shape as? NgonShape {
+
+      if let ngonShape = shape as? NgonShape, ngonShape.sides == 3 {
           ngonShape.createPoints()
-          
+//          context.drawing.drawingView?.rerenderAllShapesInefficiently()
       }
       
       shapeInProgress = nil

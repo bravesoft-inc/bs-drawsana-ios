@@ -351,11 +351,13 @@ public class DrawsanaView: UIView {
     }
 
       var boundingRect = shape.boundingRect
-      
+      var shapeTransformTranslation = shape.transform.translation
       if self.tool is SelectionTool && !(shape is TextShape) {
           boundingRect = shape.selectionBoundingRect
           boundingRect.origin.x -= boundingRect.width / 2
           boundingRect.origin.y -= boundingRect.height / 2
+          
+          shapeTransformTranslation = shape.boundingRect.middle.applying(shape.transform.affineTransform)
       }
       
     // Warning: hand-wavy math ahead
@@ -386,7 +388,7 @@ public class DrawsanaView: UIView {
      */
       
       
-      let translation = offset + shape.transform.translation +
+      let translation = offset + shapeTransformTranslation +
       // Account for the coordinate system being anchored in the middle
       CGPoint(x: -bounds.size.width * selectionIndicatorAnchorPointOffset.x, y: -bounds.size.height * selectionIndicatorAnchorPointOffset.y) +
       // We've just moved the CENTER of the selection view to the UPPER LEFT

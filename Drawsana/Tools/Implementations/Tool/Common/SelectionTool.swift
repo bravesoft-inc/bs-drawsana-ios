@@ -167,13 +167,16 @@ extension SelectionTool {
         guard let shape = selectedShape else { return }
         guard let selectionIndicatorView = delegate?.selectionIndicatorView() else { return }
 
-        editingView.bounds = selectionIndicatorView.bounds
-        editingView.transform = shape.transform.affineTransform
-        
+        var shapeTransform = shape.transform
         var boundingRect = shape.selectionBoundingRect
         if shape is TextShape {
             boundingRect = shape.boundingRect
+        } else {
+            shapeTransform.translation = shape.boundingRect.middle.applying(shape.transform.affineTransform)
         }
+        
+        editingView.bounds = selectionIndicatorView.bounds
+        editingView.transform = shapeTransform.affineTransform
         
         if let ngonShape = shape as? NgonShape, let points = ngonShape.points {
             editingView.shapeSides = points
@@ -183,7 +186,7 @@ extension SelectionTool {
         
         editingView.addShapeChangeControls()
         
-        editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shape.transform)
+        editingView.selectionToolDidUpdateEditingView(boundingRect: boundingRect, shape: shape, transform: shapeTransform)
     }
 
     

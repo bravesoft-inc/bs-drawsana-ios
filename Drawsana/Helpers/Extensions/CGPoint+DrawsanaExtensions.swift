@@ -37,3 +37,6 @@ func -(_ a: CGPoint, _ b: CGPoint) -> CGPoint {
     return CGPoint(x: a.x - b.x, y: a.y - b.y)
 }
 
+func *(_ a: CGPoint, _ scale: CGFloat) -> CGPoint {
+    return CGPoint(x: a.x * scale, y: a.y * scale)
+}

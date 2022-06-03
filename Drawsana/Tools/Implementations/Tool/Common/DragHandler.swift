@@ -199,7 +199,7 @@ class ResizeAndRotateHandler: DragHandler {
 }
 
 class ChangeShapeHandler: DragHandler {
-    private var originalTransform: ShapeTransform
+    private var originalTransform: ShapeTransform = .identity
     private var originalRect: CGRect = .zero
     private var changePoints: [CGPoint] = []
     private var changePointIndexs: [Int] = []
@@ -208,8 +208,6 @@ class ChangeShapeHandler: DragHandler {
         shape: CommonShape,
         selectionTool: SelectionTool)
     {
-        self.originalTransform = shape.transform
-        self.originalRect = shape.boundingRect
         super.init(shape: shape, selectionTool: selectionTool)
     }
     
@@ -246,12 +244,15 @@ class ChangeShapeHandler: DragHandler {
     override func handleDragStart(context: ToolOperationContext, point: CGPoint) {
         super.handleDragStart(context: context, point: point)
         
-        guard let ngonShape = shape as? NgonShape else { return }
+        guard let ngonShape = context.toolSettings.selectedShape as? NgonShape else { return }
         guard let shapePoints = ngonShape.points else { return }
+        
+        self.originalTransform = ngonShape.transform
+        self.originalRect = ngonShape.boundingRect
         
         changePointIndexs = []
         for (index, shapePoint) in shapePoints.enumerated() {
-            let resetShapePoint = shapePoint.applying(shape.transform.affineTransform)
+            let resetShapePoint = shapePoint.applying(ngonShape.transform.affineTransform)
             if CGPointDistance(from: startPoint, to: resetShapePoint) < 10 {
                 changePointIndexs.append(index)
             }
@@ -260,40 +261,31 @@ class ChangeShapeHandler: DragHandler {
     
     override func handleDragContinue(context: ToolOperationContext, point: CGPoint, velocity: CGPoint) {
         guard !changePointIndexs.isEmpty else { return }
-        guard let ngonShape = shape as? NgonShape else { return }
-        
+        guard let ngonShape = context.toolSettings.selectedShape as? NgonShape else { return }
         
         print("----------------------------------------------------------------")
-        print("shape.boundingRect.middle:\(ngonShape.boundingRect.middle)")
-        print("ngonShape.boundingRect:\(ngonShape.boundingRect)")
-        print("shape.transform:\(shape.transform.translation)")
-        print("ngonShape.boundingRectOrigin:\(ngonShape.boundingRectOrigin)")
-        print("ngonShape.selectionBoundingRect:\(ngonShape.selectionBoundingRect)")
+//        print("shape.boundingRect.middle:\(ngonShape.boundingRect.middle)")
+//        print("ngonShape.boundingRect:\(ngonShape.boundingRect)")
+//        print("shape.transform:\(ngonShape.transform.translation)")
+//        print("ngonShape.boundingRectOrigin:\(ngonShape.boundingRectOrigin)")
+//        print("ngonShape.selectionBoundingRect:\(ngonShape.selectionBoundingRect)")
         
-        let resetTransform = shape.transform.affineTransform.inverted()
+        let resetTransform = ngonShape.transform.affineTransform.inverted()
         let resetPoint = point.applying(resetTransform)
         
         for changePointIndex in changePointIndexs {
             ngonShape.points?[changePointIndex] = resetPoint
         }
         
-//        ngonShape.transform.translation = ngonShape.boundingRect.origi
-//        ngonShape.boundingRectOrigin = .zero
+        print("originalTransform.translation:\(originalTransform.translation)")
         
-    
-//        let translation = shape.boundingRect.origin
-//
-//        var resetRectOrigin = translation
-//        resetRectOrigin.x += shape.boundingRect.size.width / 2
-//        resetRectOrigin.y += shape.boundingRect.size.height / 2
-//
+        var middlePoint = originalRect.origin + CGPoint(x: originalRect.width / 2, y: originalRect.height / 2)
         
-//        boundingRect.origin.x -= boundingRect.width / 2
-//        boundingRect.origin.y -= boundingRect.height / 2
+        middlePoint = middlePoint.applying(originalTransform.affineTransform)
         
-        ngonShape.selectionBoundingRect = .init(origin: ngonShape.boundingRect.middle, size: ngonShape.boundingRect.size)
-//        ngonShape.transform.translation = ngonShape.transform.translation + ngonShape.boundingRect.middle
-//        ngonShape.boundingRectOrigin =  ngonShape.boundingRectOrigin + ngonShape.boundingRect.middle
+        print("middlePoint:\(middlePoint)")
+        
+        ngonShape.selectionBoundingRect = .init(origin: .zero, size: ngonShape.boundingRect.size)
         context.toolSettings.selectedShape = ngonShape
         selectionTool?.updateShapeView()
     }

@@ -136,14 +136,14 @@ public class ShapeEditingView: UIView {
         for control in controls {
             switch control.dragActionType {
             case .resizeAndRotate:
-                let x = -updateHalfButtonSize + (boundingRect.origin.x / transform.scale)
-                let y = -updateHalfButtonSize + (boundingRect.origin.y / transform.scale)
+                let x = -updateHalfButtonSize //+ (boundingRect.origin.x / transform.scale)
+                let y = -updateHalfButtonSize //+ (boundingRect.origin.y / transform.scale)
                 control.view.frame = CGRect(origin: .init(x: x, y: y), size: .init(width: updateButtonSize, height: updateButtonSize))
                 control.view.subviews.first?.frame = control.view.bounds.insetBy(dx: updateButtonImageInset, dy: updateButtonImageInset)
                 control.view.isHidden = shape is GuideLineShape
             case .delete:
-                let x = (resetBoundingRectWidth - updateHalfButtonSize) + (boundingRect.origin.x / transform.scale)
-                let y = -updateHalfButtonSize + (boundingRect.origin.y / transform.scale)
+                let x = (resetBoundingRectWidth - updateHalfButtonSize) // + (boundingRect.origin.x / transform.scale)
+                let y = -updateHalfButtonSize // + (boundingRect.origin.y / transform.scale)
                 control.view.frame = CGRect(origin: .init(x: x, y: y), size: .init(width: updateButtonSize, height: updateButtonSize))
                 control.view.subviews.first?.frame = control.view.bounds.insetBy(dx: updateButtonImageInset, dy: updateButtonImageInset)
             case .changeShape:
@@ -153,8 +153,11 @@ public class ShapeEditingView: UIView {
                 
                 var updateButtonX = shapeSide.x + (resetBoundingRectWidth / 2)
                 updateButtonX -= updateHalfButtonSize
+                updateButtonX -= shape.boundingRect.midX
+                
                 var updateButtonY = shapeSide.y + (resetBoundingRectHeight / 2)
                 updateButtonY -= updateHalfButtonSize
+                updateButtonY -= shape.boundingRect.midY
                 
                 updateButtonImageInset = 10 / transform.scale
                 
