@@ -171,7 +171,7 @@ extension SelectionTool {
         var boundingRect = shape.selectionBoundingRect
         if shape is TextShape {
             boundingRect = shape.boundingRect
-        } else {
+        } else if !(shape is PenShape) {
             shapeTransform.translation = shape.boundingRect.middle.applying(shape.transform.affineTransform)
         }
         

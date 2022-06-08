@@ -357,7 +357,9 @@ public class DrawsanaView: UIView {
           boundingRect.origin.x -= boundingRect.width / 2
           boundingRect.origin.y -= boundingRect.height / 2
           
-          shapeTransformTranslation = shape.boundingRect.middle.applying(shape.transform.affineTransform)
+          if !(shape is PenShape) {
+              shapeTransformTranslation = shape.boundingRect.middle.applying(shape.transform.affineTransform)
+          }
       }
       
     // Warning: hand-wavy math ahead
