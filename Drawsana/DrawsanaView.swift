@@ -134,8 +134,10 @@ public class DrawsanaView: UIView {
     return selectionIndicatorView.layer.sublayers!.compactMap({ $0 as? CAShapeLayer }).first!
   }
 
+    public var isReversed: Bool = false
+    
   private let interactiveOverlayContainerView = UIView()
-
+    
   // MARK: Init
 
   public override init(frame: CGRect) {
@@ -400,7 +402,8 @@ public class DrawsanaView: UIView {
     selectionIndicatorView.transform = ShapeTransform(
         translation: translation,
         rotation: shape.transform.rotation,
-        scale: shape.transform.scale).affineTransform
+        scale: shape.transform.scale,
+        isReversed: shape.transform.isReversed).affineTransform
       
     selectionIndicatorView.isHidden = false
 
@@ -549,9 +552,15 @@ public protocol DrawsanaViewShapeUpdating: AnyObject {
  */
 extension DrawsanaView {
     public func updateIsReversedTextShapes(isReversed: Bool) {
+        self.isReversed = isReversed
+        
         let textShapes = drawing.shapes.compactMap({ $0 as? TextShape })
         textShapes.forEach { textShape in
             textShape.transform.isReversed = isReversed
+        }
+        
+        if let textTool = drawing.drawingView?.tool as? TextTool {
+            textTool.updateTextView()
         }
         rerenderAllShapesInefficiently()
     }
