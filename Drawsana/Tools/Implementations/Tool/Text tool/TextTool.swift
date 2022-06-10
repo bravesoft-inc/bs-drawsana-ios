@@ -46,9 +46,6 @@ public class TextTool: NSObject, DrawingTool {
   // internal for use by DragTextHandler subclasses
   internal lazy var editingView: TextShapeEditingView = makeTextView()
 
-  /// Viewが反転されているかを管理するフラグ
-  public var isReversed = false
-
   public init(delegate: TextToolDelegate? = nil) {
     super.init()
     self.delegate = delegate
@@ -61,6 +58,8 @@ public class TextTool: NSObject, DrawingTool {
     if let shape = shape as? TextShape {
       beginEditing(shape: shape, context: context)
     }
+    
+    updateShapeFrame()
   }
 
   public func deactivate(context: ToolOperationContext) {
@@ -100,10 +99,9 @@ public class TextTool: NSObject, DrawingTool {
       context.toolSettings.isPersistentBufferDirty = true
     } else {
       let newShape = TextShape()
-      newShape.transform.isReversed = isReversed
       newShape.apply(userSettings: context.userSettings)
-      self.selectedShape = newShape
       newShape.transform.translation = delegate?.textToolPointForNewText(tappedPoint: point) ?? point
+      newShape.transform.isReversed = context.drawing.drawingView?.isReversed ?? false
       beginEditing(shape: newShape, context: context)
       context.operationStack.apply(operation: AddShapeOperation(shape: newShape))
     }

@@ -17,7 +17,7 @@ public struct ShapeTransform: Codable, Equatable {
   public var rotation: CGFloat
   public var scale: CGFloat
   public var isReversed = false
-
+  
   public static let identity = ShapeTransform(translation: .zero, rotation: 0, scale: 1)
 }
 
@@ -26,14 +26,16 @@ extension ShapeTransform {
   public var isIdentity: Bool {
     return translation.x == 0 && translation.y == 0 && rotation == 0 && scale == 1
   }
+  
+  public var currentScale: CGFloat {
+      return isReversed ? -scale : scale
+  }
 
   /// Representation of this transform as a `CGAffineTransform`
   public var affineTransform: CGAffineTransform {
-    let scaleX = isReversed ? -scale : scale
-    
     return CGAffineTransform(translationX: translation.x, y: translation.y)
       .rotated(by: rotation)
-      .scaledBy(x: scaleX, y: scale)
+      .scaledBy(x: currentScale, y: scale)
   }
 
   /// Apply this transform in Core Graphics
@@ -54,7 +56,8 @@ extension ShapeTransform {
     return ShapeTransform(
       translation: CGPoint(x: translation.x + delta.x, y: translation.y + delta.y),
       rotation: rotation,
-      scale: scale)
+      scale: scale,
+      isReversed: isReversed)
   }
 
   /// Return a copy of this transform with its scale multiplied by the given
@@ -63,7 +66,8 @@ extension ShapeTransform {
     return ShapeTransform(
       translation: translation,
       rotation: rotation,
-      scale: scale * amount)
+      scale: scale * amount,
+      isReversed: isReversed)
   }
 
   /// Return a copy of this transform with its rotation changed by the given
@@ -72,6 +76,7 @@ extension ShapeTransform {
     return ShapeTransform(
       translation: translation,
       rotation: rotation + radians,
-      scale: scale)
+      scale: scale,
+      isReversed: isReversed)
   }
 }

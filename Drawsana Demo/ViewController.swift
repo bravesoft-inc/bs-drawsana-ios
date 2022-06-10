@@ -294,7 +294,6 @@ class ViewController: UIViewController {
     
     @objc private func invertDrawingView(_ sender: Any?) {
         isReversed.toggle()
-        textTool.isReversed = isReversed
         
         if isReversed {
             drawingView.transform = CGAffineTransform(scaleX: -1, y: 1)
