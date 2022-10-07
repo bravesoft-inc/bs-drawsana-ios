@@ -405,7 +405,7 @@ public class DrawsanaView: UIView {
         scale: shape.transform.scale,
         isReversed: shape.transform.isReversed).affineTransform
       
-    selectionIndicatorView.isHidden = false
+    selectionIndicatorView.isHidden = true
 
     selectionIndicatorViewShapeLayer.frame = selectionIndicatorView.bounds
       

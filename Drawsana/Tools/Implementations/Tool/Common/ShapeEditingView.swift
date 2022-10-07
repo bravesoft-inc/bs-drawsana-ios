@@ -51,6 +51,12 @@ public class ShapeEditingView: UIView {
         
         shapeView.translatesAutoresizingMaskIntoConstraints = false
         shapeView.backgroundColor = .clear
+        shapeView.layer.borderColor = UIColor.white.cgColor
+        shapeView.layer.borderWidth = 1
+        shapeView.layer.shadowColor = UIColor.black.cgColor
+        shapeView.layer.shadowOffset = .zero
+        shapeView.layer.shadowRadius = 1
+        shapeView.layer.shadowOpacity = 1
         
         deleteControlView.translatesAutoresizingMaskIntoConstraints = false
         deleteControlView.backgroundColor = .red

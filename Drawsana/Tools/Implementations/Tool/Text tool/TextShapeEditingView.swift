@@ -50,6 +50,12 @@ public class TextShapeEditingView: UIView {
 
     textView.translatesAutoresizingMaskIntoConstraints = false
     textView.backgroundColor = .clear
+    textView.layer.borderColor = UIColor.white.cgColor
+    textView.layer.borderWidth = 1
+    textView.layer.shadowColor = UIColor.black.cgColor
+    textView.layer.shadowOffset = .zero
+    textView.layer.shadowRadius = 1
+    textView.layer.shadowOpacity = 1
 
     deleteControlView.translatesAutoresizingMaskIntoConstraints = false
     deleteControlView.backgroundColor = .red
