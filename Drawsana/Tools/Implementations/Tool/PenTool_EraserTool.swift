@@ -65,15 +65,18 @@ public class PenTool: DrawingTool {
   public func handleDragEnd(context: ToolOperationContext, point: CGPoint) {
     guard let shapeInProgress = shapeInProgress else { return }
     shapeInProgress.isFinished = true
-      
-      var resetRectOrigin = shapeInProgress.boundingRect.origin
-      resetRectOrigin.x += shapeInProgress.boundingRect.width / 2
-      resetRectOrigin.y += shapeInProgress.boundingRect.height / 2
-      
-      shapeInProgress.transform.translation = resetRectOrigin
-      shapeInProgress.boundingRectOrigin = resetRectOrigin
-      shapeInProgress.selectionBoundingRect = CGRect(origin: .zero, size: shapeInProgress.boundingRect.size)
-      
+
+      // 点のshape(tapした際に描画される点)以外、スクリーン上に描かれた位置をもとにshapeのoriginを設定
+      if lastVelocity != .zero {
+        var resetRectOrigin = shapeInProgress.boundingRect.origin
+        resetRectOrigin.x += shapeInProgress.boundingRect.width / 2
+        resetRectOrigin.y += shapeInProgress.boundingRect.height / 2
+
+        shapeInProgress.transform.translation = resetRectOrigin
+        shapeInProgress.boundingRectOrigin = resetRectOrigin
+        shapeInProgress.selectionBoundingRect = CGRect(origin: .zero, size: shapeInProgress.boundingRect.size)
+      }
+
     shapeInProgress.apply(userSettings: context.userSettings)
     context.operationStack.apply(operation: AddShapeOperation(shape: shapeInProgress))
     self.shapeInProgress = nil
