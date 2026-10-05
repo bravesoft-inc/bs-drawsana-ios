@@ -353,6 +353,8 @@ extension TextTool: UITextViewDelegate {
     // Marked text may be committed while ending editing, so take the final contents again
     syncShapeTextWithTextView()
     updateShapeFrame()
+    // The shape text may have just changed, so re-render it here instead of relying on the caller
+    shapeUpdater?.rerenderAllShapesInefficiently()
   }
   
   public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
