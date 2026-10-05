@@ -195,6 +195,9 @@ public class TextTool: NSObject, DrawingTool {
   private func finishEditing(context: ToolOperationContext) {
     // Only while the text view is still the active editor. Otherwise its contents may be
     // stale, e.g. when the shape was changed by undo/redo after editing had already ended.
+    // Callers should end editing before undo/redo, for example by setting
+    // `toolSettings.interactiveView` to nil (removing the text view ends editing). If undo/redo
+    // runs while the text view is still editing, its contents would be written back here.
     if editingView.textView.isFirstResponder {
       syncShapeTextWithTextView()
     }
@@ -350,6 +353,8 @@ extension TextTool: UITextViewDelegate {
     // Marked text may be committed while ending editing, so take the final contents again
     syncShapeTextWithTextView()
     updateShapeFrame()
+    // The shape text may have just changed, so re-render it here instead of relying on the caller
+    shapeUpdater?.rerenderAllShapesInefficiently()
   }
   
   public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
