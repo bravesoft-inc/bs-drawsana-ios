@@ -193,6 +193,14 @@ public class TextTool: NSObject, DrawingTool {
   /// If shape text has changed, notify operation stack so that undo works
   /// properly
   private func finishEditing(context: ToolOperationContext) {
+    // Only while the text view is still the active editor. Otherwise its contents may be
+    // stale, e.g. when the shape was changed by undo/redo after editing had already ended.
+    // Callers should end editing before undo/redo, for example by setting
+    // `toolSettings.interactiveView` to nil (removing the text view ends editing). If undo/redo
+    // runs while the text view is still editing, its contents would be written back here.
+    if editingView.textView.isFirstResponder {
+      syncShapeTextWithTextView()
+    }
     applyEditTextOperationIfTextHasChanged(context: context)
     selectedShape?.isBeingEdited = false
     context.toolSettings.interactiveView = nil
@@ -206,6 +214,15 @@ public class TextTool: NSObject, DrawingTool {
       originalText: originalText,
       text: shape.text))
     originalText = shape.text
+  }
+
+  /// Take the text view's current contents as the shape text.
+  /// `textViewDidChange` only updates the shape while no text is marked (e.g. unconfirmed
+  /// Japanese kana input), so if editing ends before that happens, the typed text would be lost.
+  /// While editing, the text view is the source of truth; call this when editing ends.
+  private func syncShapeTextWithTextView() {
+    guard let shape = selectedShape else { return }
+    shape.text = editingView.textView.text ?? ""
   }
 
   private func applyRemoveShapeOperation(context: ToolOperationContext) {
@@ -326,8 +343,18 @@ extension TextTool: UITextViewDelegate {
   }
 
   public func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+    // Save the text right before the keyboard closes, without waiting for textViewDidChange
+    syncShapeTextWithTextView()
     selectedShape?.isBeingEdited = false
     return true
+  }
+
+  public func textViewDidEndEditing(_ textView: UITextView) {
+    // Marked text may be committed while ending editing, so take the final contents again
+    syncShapeTextWithTextView()
+    updateShapeFrame()
+    // The shape text may have just changed, so re-render it here instead of relying on the caller
+    shapeUpdater?.rerenderAllShapesInefficiently()
   }
   
   public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
